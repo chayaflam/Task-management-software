@@ -2,6 +2,7 @@
 using DalApi;
 using DO;
 
+
 public static class Initialization
 {
     private static ITask? s_dalTask;
@@ -82,8 +83,18 @@ public static class Initialization
             int cost=s_random.Next(100, 500);
             Engineer newEngineer=new(id,eng,email,level,cost);
             s_dalEngineer!.Create(newEngineer);
+            
         }
     }
 
-
+    private static void createDependency()
+    {
+        List<Task> tasks = s_dalTask!.ReadAll();
+        for (int i = 0; i < 250;i++)
+        {
+            
+            int taskId = tasks[s_random.Next(tasks.Count)].Id;
+            int dependOnTask=tasks[s_random.Next(tasks.Count)].Id;
+        }
+    }
 }

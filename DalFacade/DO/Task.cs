@@ -22,7 +22,7 @@ namespace DO;
 
 public record Task
 (
-     
+    
      string Description,
      string Alias,
      bool Milestone,
@@ -37,5 +37,6 @@ public record Task
      EngineerExperience ComplexityLevel
 )
 {
-    int Id;
-}
+    public int Id;
+};
+
