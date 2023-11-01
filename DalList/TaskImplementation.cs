@@ -2,6 +2,9 @@
 using DalApi;
 using DO;
 using System.Collections.Generic;
+/// <summary>
+/// Task implementation
+/// </summary>
 
 public class TaskImplementation : ITask
 {
@@ -39,7 +42,7 @@ public class TaskImplementation : ITask
         if (updateTask != null)
         {
             DataSource.Tasks.Remove(updateTask);
-            DataSource.Tasks.Add(updateTask);
+            DataSource.Tasks.Add(item);
         }
         else { throw new Exception($"Task with ID={item.Id} does Not exist"); }
     }

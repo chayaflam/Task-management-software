@@ -1,15 +1,15 @@
 ﻿namespace DalTest;
 using DalApi;
 using DO;
-
-
-
 public static class Initialization
 {
     private static ITask? s_dalTask;
     private static IEngineer? s_dalEngineer;
     private static IDependency? s_dalDependency;
     private static readonly Random s_random = new ();
+    /// <summary>
+    /// create tasks list
+    /// </summary>
     private static void createTask()
     {
         List<Engineer> engineers = s_dalEngineer!.ReadAll();
@@ -26,6 +26,9 @@ public static class Initialization
             s_dalTask!.Create(newTask);
         }
     }
+    /// <summary>
+    /// create engineers list
+    /// </summary>
     private static void createEngineer()
     {
         string[] engineersName =
@@ -87,25 +90,33 @@ public static class Initialization
             
         }
     }
-
+    /// <summary>
+    /// create dependencys list
+    /// </summary>
     private static void createDependency()
     {
         List<Task> tasks = s_dalTask!.ReadAll();
         for (int i = 0; i < 250; i++)
         {
-            int taskId = tasks[s_random.Next(tasks.Count)].Id;
-            int dependOnTask = tasks[s_random.Next(tasks.Count)].Id;
+            int taskId = tasks[s_random.Next(0,tasks.Count)].Id;
+            int dependOnTask = tasks[s_random.Next(0,tasks.Count)].Id;
             Dependency newDep = new(taskId, dependOnTask);
             s_dalDependency!.Create(newDep);
         }
     }
+    /// <summary>
+    /// Initializes the lists
+    /// </summary>
+    /// <param name="dalDependency">Dependency interface</param>
+    /// <param name="dalEngineer">Engineer interface</param>
+    /// <param name="dalTask">Task interface</param>
     public static void Do(IDependency? dalDependency, IEngineer? dalEngineer, ITask ? dalTask)
     {
         s_dalDependency = dalDependency ?? throw new NullReferenceException("DAL can not be null!");
         s_dalEngineer = dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
         s_dalTask = dalTask ?? throw new NullReferenceException("DAL can not be null!");
-        createDependency();
         createEngineer();
         createTask();
+        createDependency();
     }
 }

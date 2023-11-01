@@ -1,9 +1,11 @@
-﻿
-
-namespace Dal;
+﻿namespace Dal;
 using DalApi;
 using DO;
 using System.Collections.Generic;
+
+/// <summary>
+/// Engineer implementation
+/// </summary>
 
 public class EngineerImplementation : IEngineer
 {
@@ -44,7 +46,7 @@ public class EngineerImplementation : IEngineer
         if (updateEng != null)
         {
             DataSource.Engineers.Remove(updateEng);
-            DataSource.Engineers.Add(updateEng);
+            DataSource.Engineers.Add(item);
         }
         else { throw new Exception($"Engineer with ID={item.Id} does Not exist"); }
     }

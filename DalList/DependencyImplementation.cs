@@ -1,10 +1,10 @@
-﻿
-
-namespace Dal;
+﻿namespace Dal;
 using DalApi;
 using DO;
 using System.Collections.Generic;
-
+/// <summary>
+/// Dependency implementation
+/// </summary>
 public class DependencyImplementation : IDependency
 {
     public int Create(Dependency item)
@@ -32,7 +32,7 @@ public class DependencyImplementation : IDependency
 
     public List<Dependency> ReadAll()
     {
-        return new List<Dependency>(DataSource.Dependencies);
+        return (DataSource.Dependencies);
     }
 
     public void Update(Dependency item)
@@ -41,7 +41,7 @@ public class DependencyImplementation : IDependency
         if (updateDep != null)
         {
             DataSource.Dependencies.Remove(updateDep);
-            DataSource.Dependencies.Add(updateDep);
+            DataSource.Dependencies.Add(item);
         }
         else { throw new Exception($"Dependency with ID={item.Id} does Not exist"); }
     }
