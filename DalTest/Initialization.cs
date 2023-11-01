@@ -3,6 +3,7 @@ using DalApi;
 using DO;
 
 
+
 public static class Initialization
 {
     private static ITask? s_dalTask;
@@ -90,11 +91,21 @@ public static class Initialization
     private static void createDependency()
     {
         List<Task> tasks = s_dalTask!.ReadAll();
-        for (int i = 0; i < 250;i++)
+        for (int i = 0; i < 250; i++)
         {
-            
             int taskId = tasks[s_random.Next(tasks.Count)].Id;
-            int dependOnTask=tasks[s_random.Next(tasks.Count)].Id;
+            int dependOnTask = tasks[s_random.Next(tasks.Count)].Id;
+            Dependency newDep = new(taskId, dependOnTask);
+            s_dalDependency!.Create(newDep);
         }
+    }
+    public static void Do(IDependency? dalDependency, IEngineer? dalEngineer, ITask ? dalTask)
+    {
+        s_dalDependency = dalDependency ?? throw new NullReferenceException("DAL can not be null!");
+        s_dalEngineer = dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
+        s_dalTask = dalTask ?? throw new NullReferenceException("DAL can not be null!");
+        createDependency();
+        createEngineer();
+        createTask();
     }
 }
