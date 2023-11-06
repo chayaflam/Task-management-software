@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Dependency implementation
 /// </summary>
-public class DependencyImplementation : IDependency
+internal class DependencyImplementation : IDependency
 {
     public int Create(Dependency item)
     {

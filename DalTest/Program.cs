@@ -14,9 +14,7 @@ namespace DalTest
 
     internal class Program
     {
-        private static IDependency? s_dalDependency = new DependencyImplementation(); //stage 1
-        private static IEngineer? s_dalEngineer = new EngineerImplementation(); //stage 1
-        private static ITask? s_dalTask = new TaskImplementation(); //stage 1
+        static readonly IDal s_dal = new DalList(); //stage 2
         /// <summary>
         /// Prints the actions menu of a particular entity
         /// </summary>
@@ -136,7 +134,7 @@ namespace DalTest
             double Engcost;
             double.TryParse(Console.ReadLine()!, out Engcost);
             Engineer engineer = new(EngId, name, Email, level, Engcost);
-            s_dalEngineer!.Create(engineer);
+            s_dal!.Engineer.Create(engineer);
         }
         /// <summary>
         /// read engineer
@@ -146,7 +144,7 @@ namespace DalTest
             Console.WriteLine("enter engineer id");
             int engId;
             int.TryParse(Console.ReadLine()!, out engId);
-            Engineer? engineer = s_dalEngineer!.Read(engId);
+            Engineer? engineer = s_dal!.Engineer.Read(engId);
             Console.WriteLine(engineer);
         }
         /// <summary>
@@ -154,7 +152,7 @@ namespace DalTest
         /// </summary>
         static void ReadAllEngineer()
         {
-            List<Engineer>? engineer = s_dalEngineer!.ReadAll();
+            List<Engineer>? engineer = s_dal!.Engineer.ReadAll();
             foreach (Engineer eng in engineer)
             {
                 Console.WriteLine(eng);
@@ -181,7 +179,7 @@ namespace DalTest
                 double Engcost;
                 double.TryParse(Console.ReadLine()!, out Engcost);
                 Engineer engineer = new(EngId, name, Email, level, Engcost);
-                s_dalEngineer!.Update(engineer);
+                s_dal!.Engineer.Update(engineer);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
         }
@@ -195,7 +193,7 @@ namespace DalTest
                 Console.WriteLine("enter engineer id");
                 int engId;
                 int.TryParse(Console.ReadLine()!, out engId);
-                s_dalEngineer!.Delete(engId);
+                s_dal!.Engineer.Delete(engId);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
         }
@@ -230,7 +228,7 @@ namespace DalTest
             EngineerExperience.TryParse(Console.ReadLine()!, out complexityLevel);
             DO.Task task = new(description, alias, milestone, createdAt,
                 null, forecastDate, deadline, null, deliverables, remarks, engineerId, complexityLevel);
-            Console.WriteLine("The Id is: " + s_dalTask!.Create(task));
+            Console.WriteLine("The Id is: " + s_dal!.Task.Create(task));
         }
         /// <summary>
         /// read task
@@ -240,14 +238,14 @@ namespace DalTest
             Console.WriteLine("enter the task id");
             int taskId;
             int.TryParse(Console.ReadLine()!, out taskId);
-            Console.WriteLine(s_dalTask!.Read(taskId));
+            Console.WriteLine(s_dal!.Task.Read(taskId));
         }
         /// <summary>
         /// Read all task
         /// </summary>
         static void ReadAllTask()
         {
-            List<DO.Task>? tasks = s_dalTask!.ReadAll();
+            List<DO.Task>? tasks = s_dal!.Task.ReadAll();
             foreach (DO.Task task in tasks)
             {
                 Console.WriteLine(task);
@@ -290,7 +288,7 @@ namespace DalTest
             DO.Task task = new(description, alias, milestone, createdAt,
                 null, forecastDate, deadline, null, deliverables, remarks, engineerId, complexityLevel);
             task.Id = taskId;
-            s_dalTask!.Update(task);
+            s_dal!.Task.Update(task);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
         }
@@ -304,7 +302,7 @@ namespace DalTest
                 Console.WriteLine("enter task id");
                 int taskId;
                 int.TryParse(Console.ReadLine()!, out taskId);
-                s_dalTask!.Delete(taskId);
+                s_dal!.Task.Delete(taskId);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
         }
@@ -320,7 +318,7 @@ namespace DalTest
 
             int.TryParse(Console.ReadLine(), out depTaskId);
             Dependency dependency = new(taskId, depTaskId);
-            Console.WriteLine("The Id is: " + s_dalDependency!.Create(dependency));
+            Console.WriteLine("The Id is: " + s_dal!.Dependency.Create(dependency));
 
         }
         /// <summary>
@@ -331,7 +329,7 @@ namespace DalTest
             Console.WriteLine("enter dependency task id");
             int  depId;
             int.TryParse(Console.ReadLine()!, out depId);
-            Dependency ?dependency= s_dalDependency!.Read(depId);
+            Dependency ?dependency= s_dal!.Dependency.Read(depId);
             Console.WriteLine(dependency);
         }
         /// <summary>
@@ -339,7 +337,7 @@ namespace DalTest
         /// </summary>
         static void ReadAllDep()
         {
-             s_dalDependency!.ReadAll().ForEach(x => Console.WriteLine(x));
+             s_dal!.Dependency.ReadAll().ForEach(x => Console.WriteLine(x));
         }
         /// <summary>
         /// Update dependency
@@ -368,7 +366,7 @@ namespace DalTest
                 Console.WriteLine("enter dependency task id");
                 int depId;
                 int.TryParse(Console.ReadLine()!, out depId);
-                s_dalDependency!.Delete(depId);
+                s_dal!.Dependency.Delete(depId);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
         }
@@ -380,7 +378,7 @@ namespace DalTest
         {
             try
             {
-                Initialization.Do(s_dalDependency, s_dalEngineer, s_dalTask);
+                Initialization.Do(s_dal);
                 do
                 {
                     Console.WriteLine("Select an entity");

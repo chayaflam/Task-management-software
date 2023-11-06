@@ -3,16 +3,14 @@ using DalApi;
 using DO;
 public static class Initialization
 {
-    private static ITask? s_dalTask;
-    private static IEngineer? s_dalEngineer;
-    private static IDependency? s_dalDependency;
+    private static IDal? s_dal;
     private static readonly Random s_random = new ();
     /// <summary>
     /// create tasks list
     /// </summary>
     private static void createTask()
     {
-        List<Engineer> engineers = s_dalEngineer!.ReadAll();
+        List<Engineer> engineers = s_dal!.Engineer.ReadAll();
 
         for (int i = 0; i < 100; i++)
         {
@@ -23,7 +21,7 @@ public static class Initialization
             EngineerExperience level = (EngineerExperience)s_random.Next(0, 4);
             Task newTask = new("fun task", "task alias", true, null,
                 startDate, null, deadline, endDate, null, null, engId, level);
-            s_dalTask!.Create(newTask);
+            s_dal!.Task.Create(newTask);
         }
     }
     /// <summary>
@@ -81,12 +79,12 @@ public static class Initialization
             int id;
             do
                 id = s_random.Next(100000000, 999999999);
-            while (s_dalEngineer!.Read(id) != null);
+            while (s_dal!.Engineer.Read(id) != null);
             string email = $"{eng}@gmail.com";
             EngineerExperience level = (EngineerExperience)s_random.Next(0, 4);
             int cost=s_random.Next(100, 500);
             Engineer newEngineer=new(id,eng,email,level,cost);
-            s_dalEngineer!.Create(newEngineer);
+            s_dal!.Engineer.Create(newEngineer);
             
         }
     }
@@ -95,13 +93,13 @@ public static class Initialization
     /// </summary>
     private static void createDependency()
     {
-        List<Task> tasks = s_dalTask!.ReadAll();
+        List<Task> tasks = s_dal!.Task.ReadAll();
         for (int i = 0; i < 250; i++)
         {
             int taskId = tasks[s_random.Next(0,tasks.Count)].Id;
             int dependOnTask = tasks[s_random.Next(0,tasks.Count)].Id;
             Dependency newDep = new(taskId, dependOnTask);
-            s_dalDependency!.Create(newDep);
+            s_dal!.Dependency.Create(newDep);
         }
     }
     /// <summary>
@@ -110,11 +108,9 @@ public static class Initialization
     /// <param name="dalDependency">Dependency interface</param>
     /// <param name="dalEngineer">Engineer interface</param>
     /// <param name="dalTask">Task interface</param>
-    public static void Do(IDependency? dalDependency, IEngineer? dalEngineer, ITask ? dalTask)
+    public static void Do(IDal dal)
     {
-        s_dalDependency = dalDependency ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalEngineer = dalEngineer ?? throw new NullReferenceException("DAL can not be null!");
-        s_dalTask = dalTask ?? throw new NullReferenceException("DAL can not be null!");
+        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
         createEngineer();
         createTask();
         createDependency();

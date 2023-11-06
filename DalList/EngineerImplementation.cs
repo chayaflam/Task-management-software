@@ -7,7 +7,7 @@ using System.Collections.Generic;
 /// Engineer implementation
 /// </summary>
 
-public class EngineerImplementation : IEngineer
+internal class EngineerImplementation : IEngineer
 {
     public int Create(Engineer item)
     {
