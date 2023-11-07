@@ -1,6 +1,8 @@
 ﻿namespace DalTest;
 using DalApi;
 using DO;
+using System.Threading.Tasks;
+
 public static class Initialization
 {
     private static IDal? s_dal;
@@ -10,16 +12,16 @@ public static class Initialization
     /// </summary>
     private static void createTask()
     {
-        List<Engineer> engineers = s_dal!.Engineer.ReadAll();
+        IEnumerable<Engineer> engineers = s_dal!.Engineer.ReadAll()!;
 
         for (int i = 0; i < 100; i++)
         {
             DateTime startDate = DateTime.Now;
             DateTime deadline = startDate.AddDays(40);
             DateTime endDate = startDate.AddDays(s_random.Next(10, 40));
-            int engId = engineers[s_random.Next(engineers.Count)].Id;
+            int engId = engineers.ElementAt(s_random.Next(0, engineers.Count())).Id;
             EngineerExperience level = (EngineerExperience)s_random.Next(0, 4);
-            Task newTask = new("fun task", "task alias", true, null,
+            DO.Task newTask = new("fun task", "task alias", true, null,
                 startDate, null, deadline, endDate, null, null, engId, level);
             s_dal!.Task.Create(newTask);
         }
@@ -93,11 +95,11 @@ public static class Initialization
     /// </summary>
     private static void createDependency()
     {
-        List<Task> tasks = s_dal!.Task.ReadAll();
+        IEnumerable<DO.Task> tasks = s_dal!.Task.ReadAll()!;
         for (int i = 0; i < 250; i++)
         {
-            int taskId = tasks[s_random.Next(0,tasks.Count)].Id;
-            int dependOnTask = tasks[s_random.Next(0,tasks.Count)].Id;
+            int taskId = tasks.ElementAt(s_random.Next(0, tasks.Count())).Id;
+            int dependOnTask = tasks.ElementAt(s_random.Next(0, tasks.Count())).Id;
             Dependency newDep = new(taskId, dependOnTask);
             s_dal!.Dependency.Create(newDep);
         }

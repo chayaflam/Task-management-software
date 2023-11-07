@@ -19,7 +19,7 @@ public interface ICrud<T> where T : class
     /// stage 1 only, Reads all entity objects
     /// </summary>
     /// <returns>return the T list</returns>
-    List<T> ReadAll();
+    IEnumerable<T?> ReadAll(Func<T?, bool>? filter = null); // stage 2
     /// <summary>
     /// Updates entity object
     /// </summary>
@@ -30,4 +30,10 @@ public interface ICrud<T> where T : class
     /// </summary>
     /// <param name="id">the id of the T that you want to delete</param>
     void Delete(int id);
+    /// <summary>
+    /// Returns the first object that returns true for the received function
+    /// </summary>
+    /// <param name="filter">function</param>
+    /// <returns>Returns the first object that returns true for the received function</returns>
+    T? Read(Func<T, bool> filter); // stage 2
 }

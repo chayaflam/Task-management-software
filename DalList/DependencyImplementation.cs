@@ -17,32 +17,42 @@ internal class DependencyImplementation : IDependency
 
     public void Delete(int id)
     {
-        Dependency? deleteDep = DataSource.Dependencies.Find(delDep => delDep.Id == id);
-        if (deleteDep != null)
-        {
-            DataSource.Dependencies.Remove(deleteDep);
-        }
-        else throw new Exception($"Dependency with ID={id} does Not exist");
+
+        int find=DataSource.Dependencies.RemoveAll(dep => dep.Id == id);
+        if(find==0)
+           throw new DalDoesNotExistException($"Dependency with ID={id} does Not exist");
     }
 
     public Dependency? Read(int id)
     {
-        return DataSource.Dependencies.Find(item => item.Id == id);
+
+        Dependency? dep = DataSource.Dependencies.FirstOrDefault(item => item.Id == id);
+        if(dep==null)  
+            throw new DalDoesNotExistException($"Dependency with ID={id} does Not exist");
+        return dep;
     }
 
-    public List<Dependency> ReadAll()
+    public Dependency? Read(Func<Dependency, bool> filter)
     {
-        return (DataSource.Dependencies);
+        Dependency? dep=DataSource.Dependencies.FirstOrDefault(filter);
+        if (dep == null)
+            throw new DalDoesNotExistException("This dependency does Not exist");
+        return dep;
+    }
+
+    public IEnumerable<Dependency?> ReadAll(Func<Dependency?, bool>? filter = null) //stage 2
+    {
+        if (filter == null)
+            return DataSource.Dependencies.Select(item => item);
+        else
+            return DataSource.Dependencies.Where(filter);
     }
 
     public void Update(Dependency item)
     {
-        Dependency? updateDep = DataSource.Dependencies.Find(upDep => upDep.Id == item.Id);
-        if (updateDep != null)
-        {
-            DataSource.Dependencies.Remove(updateDep);
+        int find=  DataSource.Dependencies.RemoveAll(dep=>dep.Id == item.Id);
+        if (find == 0) throw new DalDoesNotExistException($"Dependency with ID={item.Id} does Not exist");
+        else
             DataSource.Dependencies.Add(item);
-        }
-        else { throw new Exception($"Dependency with ID={item.Id} does Not exist"); }
     }
 }

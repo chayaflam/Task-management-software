@@ -2,6 +2,8 @@
 using DalApi;
 using DO;
 using System.Collections.Generic;
+using System.Linq;
+
 /// <summary>
 /// Task implementation
 /// </summary>
@@ -18,32 +20,34 @@ internal class TaskImplementation : ITask
 
     public void Delete(int id)
     {
-        Task? deleteTask = DataSource.Tasks.Find(delTask => delTask.Id == id);
-        if (deleteTask != null)
-        {
-            DataSource.Tasks.Remove(deleteTask);
-        }
-        else throw new Exception($"Task with ID={id} does Not exist");
+        int find = DataSource.Tasks.RemoveAll(task => task.Id == id);
+        if (find == 0)
+            throw new DalDoesNotExistException($"Task with ID={id} does Not exist");
     }
 
     public Task? Read(int id)
     {
-        return DataSource.Tasks.Find(item => item.Id == id);
+        return DataSource.Tasks.FirstOrDefault(item => item.Id == id);
     }
 
-    public List<Task> ReadAll()
+    public Task? Read(Func<Task, bool> filter)
     {
-        return new List<Task>(DataSource.Tasks);
+       return DataSource.Tasks.FirstOrDefault(filter);
+    }
+
+    public IEnumerable<Task?> ReadAll(Func<Task?, bool>? filter = null) //stage 2
+    {
+        if (filter == null)
+            return DataSource.Tasks.Select(item => item);
+        else
+            return DataSource.Tasks.Where(filter);
     }
 
     public void Update(Task item)
     {
-       Task? updateTask= DataSource.Tasks.Find(upTask => upTask.Id == item.Id);
-        if (updateTask != null)
-        {
-            DataSource.Tasks.Remove(updateTask);
+        int find = DataSource.Tasks.RemoveAll(task => task.Id == item.Id);
+        if (find == 0) throw new DalDoesNotExistException($"Task with ID={item.Id} does Not exist");
+        else
             DataSource.Tasks.Add(item);
-        }
-        else { throw new Exception($"Task with ID={item.Id} does Not exist"); }
     }
 }

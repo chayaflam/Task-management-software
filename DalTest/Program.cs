@@ -22,8 +22,6 @@ namespace DalTest
         {
             Console.WriteLine("Select an action");
             Console.WriteLine("1 exit"+" 2 Create" + " 3 Read" + " 4 ReadAll" + " 5 Update" + " 6 Delete");
-
-
         }
         /// <summary>
         /// Dependency CRUD
@@ -52,7 +50,7 @@ namespace DalTest
                     deleteDep();
                     break;
                 default:
-                    throw new Exception("Invalid number");
+                    throw new DalInvalidSelectionException("Invalid number");
             }
         }
         /// <summary>
@@ -82,7 +80,7 @@ namespace DalTest
                     deleteTask();
                     break;
                 default:
-                    throw new Exception("Invalid number");
+                    throw new DalInvalidSelectionException("Invalid number");
             }
         }
         /// <summary>
@@ -112,7 +110,7 @@ namespace DalTest
                     deleteEngineer();
                     break;
                 default:
-                    throw new Exception("Invalid number");
+                    throw new DalInvalidSelectionException("Invalid number");
             }
         }
         /// <summary>
@@ -152,7 +150,7 @@ namespace DalTest
         /// </summary>
         static void ReadAllEngineer()
         {
-            List<Engineer>? engineer = s_dal!.Engineer.ReadAll();
+            IEnumerable<Engineer>? engineer = s_dal!.Engineer.ReadAll()!;
             foreach (Engineer eng in engineer)
             {
                 Console.WriteLine(eng);
@@ -163,39 +161,37 @@ namespace DalTest
         /// </summary>
         static void UpdateEngineer()
         {
-            try
-            {
-                Console.WriteLine("enter the engineer id");
-                int EngId;
-                int.TryParse(Console.ReadLine()!, out EngId);
-                Console.WriteLine("enter the engineer name");
-                string name = Console.ReadLine()!;
-                Console.WriteLine("enter the engineer Email");
-                string Email = Console.ReadLine()!;
-                Console.WriteLine("enter engineer level");
-                EngineerExperience level;
-                EngineerExperience.TryParse(Console.ReadLine()!, out level);
-                Console.WriteLine("enter the engineer cost");
-                double Engcost;
-                double.TryParse(Console.ReadLine()!, out Engcost);
-                Engineer engineer = new(EngId, name, Email, level, Engcost);
-                s_dal!.Engineer.Update(engineer);
-            }
-            catch (Exception ex) { Console.WriteLine(ex); }
+            Console.WriteLine("enter the engineer id");
+            int EngId;
+            int.TryParse(Console.ReadLine()!, out EngId);
+            Engineer? engineer = s_dal!.Engineer.Read(EngId);
+            if (engineer == null) 
+            { throw new DalDoesNotExistException($"Engineer with ID={EngId} does Not exist");};
+            Console.WriteLine("enter the engineer name");
+            string name = Console.ReadLine()!;
+            Console.WriteLine("enter the engineer Email");
+            string Email = Console.ReadLine()!;
+            Console.WriteLine("enter engineer level");
+            EngineerExperience level;
+            EngineerExperience.TryParse(Console.ReadLine()!, out level);
+            Console.WriteLine("enter the engineer cost");
+            double Engcost;
+            double.TryParse(Console.ReadLine()!, out Engcost);
+            Engineer engineer1 = new(EngId , (string.IsNullOrEmpty(name)?engineer.Name:name),
+                (string.IsNullOrEmpty(Email) ? engineer.Email : Email), 
+                (level==0?engineer.Level:level),
+                (Engcost==0)?engineer.Cost:Engcost);
+            s_dal!.Engineer.Update(engineer1);
         }
         /// <summary>
         /// delete engineer
         /// </summary>
         static void deleteEngineer()
         {
-            try
-            {
                 Console.WriteLine("enter engineer id");
                 int engId;
                 int.TryParse(Console.ReadLine()!, out engId);
                 s_dal!.Engineer.Delete(engId);
-            }
-            catch (Exception ex) { Console.WriteLine(ex); }
         }
         /// <summary>
         /// create task
@@ -245,7 +241,7 @@ namespace DalTest
         /// </summary>
         static void ReadAllTask()
         {
-            List<DO.Task>? tasks = s_dal!.Task.ReadAll();
+            IEnumerable<DO.Task>? tasks = s_dal!.Task.ReadAll()!;
             foreach (DO.Task task in tasks)
             {
                 Console.WriteLine(task);
@@ -256,11 +252,12 @@ namespace DalTest
         /// </summary>
         static void UpdateTask()
         {
-            try { 
             Console.WriteLine("enter the task id");
             int taskId;
             int.TryParse(Console.ReadLine()!, out taskId);
-
+            DO.Task ?task = s_dal.Task.Read(taskId)!;
+            if (task == null) 
+            { throw new DalDoesNotExistException($"Engineer with ID={taskId} does Not exist"); };
             Console.WriteLine("enter task Description");
             string description = Console.ReadLine()!;
             Console.WriteLine("enter task Alias");
@@ -268,13 +265,18 @@ namespace DalTest
             Console.WriteLine("enter task Milestone");
             bool milestone;
             bool.TryParse(Console.ReadLine()!, out milestone);
-            DateTime createdAt = DateTime.Now;
+            Console.WriteLine("enter task StartDate");
+            DateTime StartDate;
+            DateTime.TryParse(Console.ReadLine()!, out StartDate);
             Console.WriteLine("enter task ForecastDate");
             DateTime forecastDate;
             DateTime.TryParse(Console.ReadLine()!, out forecastDate);
             Console.WriteLine("enter task Deadline");
             DateTime deadline;
             DateTime.TryParse(Console.ReadLine()!, out deadline);
+            Console.WriteLine("enter task CompleteDate");
+            DateTime CompleteDate;
+            DateTime.TryParse(Console.ReadLine()!, out CompleteDate);
             Console.WriteLine("enter task Deliverables");
             string deliverables = Console.ReadLine()!;
             Console.WriteLine("enter task Remarks");
@@ -285,26 +287,30 @@ namespace DalTest
             Console.WriteLine("enter task ComplexityLevel");
             EngineerExperience complexityLevel;
             EngineerExperience.TryParse(Console.ReadLine()!, out complexityLevel);
-            DO.Task task = new(description, alias, milestone, createdAt,
-                null, forecastDate, deadline, null, deliverables, remarks, engineerId, complexityLevel);
-            task.Id = taskId;
-            s_dal!.Task.Update(task);
-            }
-            catch (Exception ex) { Console.WriteLine(ex); }
+            DO.Task newTsk = new((string.IsNullOrEmpty(description) ? task.Description : description),
+                (string.IsNullOrEmpty(alias) ? task.Alias : alias),
+                milestone ? true : milestone, task.CreatedAt,
+                (StartDate.Year == 0001 ? task.Start : StartDate),
+                (forecastDate.Year == 0001 ? task.ForecastDate : forecastDate),
+                (deadline.Year == 0001 ? task.Deadline : deadline),
+                (CompleteDate.Year == 0001 ? task.Complete : CompleteDate),
+                (string.IsNullOrEmpty(deliverables) ? task.Deliverables : deliverables),
+                (string.IsNullOrEmpty(remarks) ? task.Remarks : remarks),
+                (engineerId == 0 ? task.EngineerId : engineerId),
+                (complexityLevel == 0 ? task.ComplexityLevel : complexityLevel));
+            newTsk.Id = taskId;
+            s_dal!.Task.Update(newTsk);
         }
         /// <summary>
         /// delete task
         /// </summary>
         static void deleteTask()
         {
-            try
-            {
+
                 Console.WriteLine("enter task id");
                 int taskId;
                 int.TryParse(Console.ReadLine()!, out taskId);
                 s_dal!.Task.Delete(taskId);
-            }
-            catch (Exception ex) { Console.WriteLine(ex); }
         }
         /// <summary>
         /// create dependency
@@ -337,38 +343,46 @@ namespace DalTest
         /// </summary>
         static void ReadAllDep()
         {
-             s_dal!.Dependency.ReadAll().ForEach(x => Console.WriteLine(x));
+            IEnumerable<Dependency>? dependency = s_dal!.Dependency.ReadAll()!;
+            foreach (Dependency dep in dependency)
+            {
+                Console.WriteLine(dep);
+            }
         }
         /// <summary>
         /// Update dependency
         /// </summary>
         static void UpdateDep()
         {
-            try {
             Console.WriteLine("enter dependency task id");
-            int depId, taskId, depTaskId; ;
-            int.TryParse(Console.ReadLine()!, out depId);
+            int depId;
+            int taskId;
+            int depTaskId;
+            int.TryParse(Console.ReadLine(), out depId);
+            Dependency ?dependency = s_dal!.Dependency.Read(depId);
+            if (dependency == null)
+            { 
+                throw new DalDoesNotExistException($"Engineer with ID={depId} does Not exist");
+            };
             Console.WriteLine("enter task id");
             int.TryParse(Console.ReadLine()!, out taskId);
             Console.WriteLine("enter task depended id");
             int.TryParse(Console.ReadLine(), out depTaskId);
-            Dependency? dependency = new(taskId, depTaskId);
-            dependency.Id = depId;
-            }catch (Exception ex) { Console.WriteLine(ex); }
+
+            Dependency newDep=new((taskId != 0)? taskId : dependency.DependentTask, 
+                (depTaskId != 0) ? depTaskId : dependency.DependsOnTask);
+            newDep.Id = depId;
+            s_dal!.Dependency.Update(newDep);
         }
         /// <summary>
         /// delete dependency
         /// </summary>
         static void deleteDep()
         {
-            try
-            {
                 Console.WriteLine("enter dependency task id");
                 int depId;
                 int.TryParse(Console.ReadLine()!, out depId);
                 s_dal!.Dependency.Delete(depId);
-            }
-            catch (Exception ex) { Console.WriteLine(ex); }
         }
         /// <summary>
         /// the main program
@@ -399,14 +413,15 @@ namespace DalTest
                             TaskCRUD();
                             break;
                         default:
-                            throw new Exception("Invalid number");
+                            throw new DalInvalidSelectionException("Invalid number");
                     }
                 } while (true);
             }
-           catch(Exception error) 
+            catch(Exception error) 
             { 
                 Console.WriteLine(error);
             }
+           
         }
     }
 }
