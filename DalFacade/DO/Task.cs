@@ -25,11 +25,11 @@ public record Task
     
      string Description,
      string Alias,
-     bool Milestone,
+     bool ?Milestone,
      DateTime ?CreatedAt,
      DateTime ?Start,
      DateTime ?ForecastDate,
-     DateTime Deadline,
+     DateTime ?Deadline,
      DateTime ?Complete,
      string ?Deliverables,
      string ?Remarks,
@@ -38,5 +38,6 @@ public record Task
 )
 {
     public int Id;
+    public Task() : this( "", "",null, null, null,null,null,null,"","",0,0) { } //empty ctor for stage 3
 };
 

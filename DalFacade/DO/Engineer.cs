@@ -15,10 +15,12 @@ namespace DO;
 public record Engineer
     (
     int Id,
-    string Name,
-    string Email,
-    EngineerExperience Level,
-    double Cost
+    string? Name,
+    string? Email,
+    EngineerExperience? Level,
+    double? Cost
     )
 {
+    public Engineer() : this(0,null,null,0,0) { } //empty ctor for stage 3
+   
 }

@@ -28,4 +28,15 @@ public class DalInvalidSelectionException : Exception
 }
 
 
+/// <summary>
+/// XML file load create exception
+/// </summary>
+[Serializable]
+public class XMLFileLoadCreateException : Exception
+{
+    public XMLFileLoadCreateException(string? message) : base(message) { }
+}
+
+
+
 

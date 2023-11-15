@@ -17,4 +17,5 @@ public record Dependency
 
 {
    public int Id;
+    public Dependency() : this(0, 0) { } //empty ctor for stage 3
 };
