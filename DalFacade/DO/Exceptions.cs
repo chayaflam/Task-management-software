@@ -32,9 +32,9 @@ public class DalInvalidSelectionException : Exception
 /// XML file load create exception
 /// </summary>
 [Serializable]
-public class XMLFileLoadCreateException : Exception
+public class DalXMLFileLoadCreateException : Exception
 {
-    public XMLFileLoadCreateException(string? message) : base(message) { }
+    public DalXMLFileLoadCreateException(string? message) : base(message) { }
 }
 
 

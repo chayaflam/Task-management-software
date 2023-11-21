@@ -2,14 +2,30 @@
 
 using DalApi;
 using DO;
+using System.Xml.Linq;
 
 namespace Dal;
 
 internal class EngineerImplementation : IEngineer
 {
+    const string s_engineer = "engineer";
     public int Create(Engineer item)
     {
-        throw new NotImplementedException();
+        XElement rootEng = XMLTools.LoadListFromXMLElement(s_engineer);
+        XElement newEng = new(s_engineer);
+        XElement? find = rootEng.Elements("id")?.Where(p => p.Element("id")?.Value == item.Id.ToString()).FirstOrDefault();
+        if (find != null)
+        {
+            throw new Exception($"Engineer with ID={item.Id} already exists");
+        }
+        else
+        {
+            rootEng.Add(newEng);
+
+            XMLTools.SaveListToXMLElement(rootEng, s_engineer);
+            return item.Id;
+        }
+
     }
 
     public void Delete(int id)

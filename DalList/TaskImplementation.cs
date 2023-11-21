@@ -10,6 +10,7 @@ using System.Linq;
 
 internal class TaskImplementation : ITask
 {
+    
     public int Create(Task item)
     {
         int id = DataSource.Config.NextTaskId;
