@@ -61,7 +61,10 @@ internal class EngineerImplementation : IEngineer
     {
         XElement rootEng = XMLTools.LoadListFromXMLElement(s_engineer);
         XElement find = rootEng.Elements(s_engineer)?.Where(p => p.Element("Id")?.Value == id.ToString()).FirstOrDefault()!;
-        return  getEngineer(find);
+        if (find != null)
+            return getEngineer(find);
+        else
+            return null;
     }
 
     public Engineer? Read(Func<Engineer, bool> filter)
