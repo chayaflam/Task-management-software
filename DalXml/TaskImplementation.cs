@@ -21,7 +21,9 @@ internal class TaskImplementation : ITask
         XMLTools.SaveListToXMLSerializer(listTask, s_Task);
         return id;
     }
-
+    /// <summary>
+    /// delete task
+    /// </summary>
     public void Delete(int id)
     {
         List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_Task)!;
@@ -30,19 +32,25 @@ internal class TaskImplementation : ITask
             throw new DalDoesNotExistException($"Task with ID={id} does Not exist");
         XMLTools.SaveListToXMLSerializer(listTask, s_Task);
     }
-
+    /// <summary>
+    /// read task by id
+    /// </summary>
     public DO.Task? Read(int id)
     {
         List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_Task)!;
         return listTask.FirstOrDefault(item => item.Id == id);
     }
-
+    /// <summary>
+    /// read a task according to a certain condition
+    /// </summary>
     public DO.Task? Read(Func<DO.Task, bool> filter)
     {
         List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_Task)!;
         return listTask.FirstOrDefault(filter);
     }
-
+    /// <summary>
+    /// read all tasks
+    /// </summary>
     public IEnumerable<DO.Task?> ReadAll(Func<DO.Task?, bool>? filter = null)
     {
         List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_Task)!;
@@ -51,7 +59,9 @@ internal class TaskImplementation : ITask
         else
             return listTask.Where(filter);
     }
-
+    /// <summary>
+    /// update task
+    /// </summary>
     public void Update(DO.Task item)
     {
         List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_Task)!;

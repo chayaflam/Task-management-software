@@ -7,6 +7,10 @@ namespace Dal;
 internal class DependencyImplementation : IDependency
 {
     string s_Dependency = "dependencies";
+
+    /// <summary>
+    /// create dependency
+    /// </summary>
     public int Create(Dependency item)
     {
         List<DO.Dependency> listDep = XMLTools.LoadListFromXMLSerializer<Dependency>(s_Dependency)!;
@@ -16,7 +20,9 @@ internal class DependencyImplementation : IDependency
         XMLTools.SaveListToXMLSerializer(listDep, s_Dependency);
         return id;
     }
-
+    /// <summary>
+    /// delete dependency
+    /// </summary>
     public void Delete(int id)
     {
 
@@ -26,7 +32,9 @@ internal class DependencyImplementation : IDependency
             throw new DalDoesNotExistException($"Dependency with ID={id} does Not exist");
         XMLTools.SaveListToXMLSerializer(listDep, s_Dependency);
     }
-
+    /// <summary>
+    /// read dependency by id
+    /// </summary>
     public Dependency? Read(int id)
     {
         List<DO.Dependency> listDep = XMLTools.LoadListFromXMLSerializer<Dependency>(s_Dependency)!;
@@ -35,7 +43,9 @@ internal class DependencyImplementation : IDependency
             throw new DalDoesNotExistException($"Dependency with ID={id} does Not exist");
         return dep;
     }
-
+    /// <summary>
+    /// read a dependency according to a certain condition
+    /// </summary>
     public Dependency? Read(Func<Dependency, bool> filter)
     {
         List<DO.Dependency> listDep = XMLTools.LoadListFromXMLSerializer<Dependency>(s_Dependency)!;
@@ -44,7 +54,9 @@ internal class DependencyImplementation : IDependency
             throw new DalDoesNotExistException("This dependency does Not exist");
         return dep;
     }
-
+    /// <summary>
+    /// read all dependencies
+    /// </summary>
     public IEnumerable<Dependency?> ReadAll(Func<Dependency?, bool>? filter = null)
     {
         List<DO.Dependency> listDep = XMLTools.LoadListFromXMLSerializer<Dependency>(s_Dependency)!;
@@ -53,7 +65,9 @@ internal class DependencyImplementation : IDependency
         else
             return listDep.Where(filter);
     }
-
+    /// <summary>
+    /// update dependency
+    /// </summary>
     public void Update(Dependency item)
     {
         List<DO.Dependency> listDep = XMLTools.LoadListFromXMLSerializer<Dependency>(s_Dependency)!;

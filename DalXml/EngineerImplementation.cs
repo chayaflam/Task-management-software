@@ -9,6 +9,9 @@ namespace Dal;
 internal class EngineerImplementation : IEngineer
 {
     const string s_engineer = "engineers";
+    /// <summary>
+    /// Converts an xml engineer to engineer object
+    /// </summary>
     static Engineer? getEngineer(XElement s) =>
 
        s.ToIntNullable("Id") is null ? null : new DO.Engineer()
@@ -19,6 +22,9 @@ internal class EngineerImplementation : IEngineer
            Level =s.ToEnumNullable<DO.EngineerExperience>("Level")?? EngineerExperience.Novice,
            Cost =s.ToDoubleNullable ("Cost")
        };
+    /// <summary>
+    /// create engineer
+    /// </summary>
     public int Create(Engineer item)
     {
         XElement rootEng = XMLTools.LoadListFromXMLElement(s_engineer);
@@ -44,7 +50,9 @@ internal class EngineerImplementation : IEngineer
             return item.Id;
         }
     }
-
+    /// <summary>
+    /// delete engineer
+    /// </summary>
     public void Delete(int id)
     {
         XElement rootEng = XMLTools.LoadListFromXMLElement(s_engineer);
@@ -57,7 +65,9 @@ internal class EngineerImplementation : IEngineer
             XMLTools.SaveListToXMLElement(rootEng, s_engineer);   
         }
     }
-
+    /// <summary>
+    /// read engineer by id
+    /// </summary>
     public Engineer? Read(int id)
     {
         XElement rootEng = XMLTools.LoadListFromXMLElement(s_engineer);
@@ -67,14 +77,18 @@ internal class EngineerImplementation : IEngineer
         else
             return null;
     }
-
+    /// <summary>
+    /// read a engineer according to a certain condition
+    /// </summary>
     public Engineer? Read(Func<Engineer, bool> filter)
     {
         XElement rootEng = XMLTools.LoadListFromXMLElement(s_engineer);
         XElement find = rootEng.Elements(s_engineer).Where(p=>filter(getEngineer(p)!)).FirstOrDefault()!;
         return getEngineer(find);
     }
-
+    /// <summary>
+    /// read all engineers
+    /// </summary>
     public IEnumerable<Engineer> ReadAll(Func<Engineer, bool>? filter = null)
     {
         XElement rootEng = XMLTools.LoadListFromXMLElement(s_engineer);
@@ -85,7 +99,9 @@ internal class EngineerImplementation : IEngineer
         else
             return rootEng.Elements().Select(p => (getEngineer(p))).Where(filter)!;
     }
-
+    /// <summary>
+    /// update engineer
+    /// </summary>
     public void Update(Engineer item)
     {
         XElement rootEng = XMLTools.LoadListFromXMLElement(s_engineer);

@@ -7,6 +7,9 @@ using System.Collections.Generic;
 /// </summary>
 internal class DependencyImplementation : IDependency
 {
+    /// <summary>
+    /// create dependency
+    /// </summary>
     public int Create(Dependency item)
     {
         int id = DataSource.Config.NextDependencyId;
@@ -14,14 +17,18 @@ internal class DependencyImplementation : IDependency
         DataSource.Dependencies.Add(dependency);
         return id;
     }
-
+    /// <summary>
+    /// delete dependency
+    /// </summary>
     public void Delete(int id)
     {
         int find=DataSource.Dependencies.RemoveAll(dep => dep.Id == id);
         if(find==0)
            throw new DalDoesNotExistException($"Dependency with ID={id} does Not exist");
     }
-
+    /// <summary>
+    /// read dependency by id
+    /// </summary>
     public Dependency? Read(int id)
     {
 
@@ -30,7 +37,9 @@ internal class DependencyImplementation : IDependency
             throw new DalDoesNotExistException($"Dependency with ID={id} does Not exist");
         return dep;
     }
-
+    /// <summary>
+    /// read a dependency according to a certain condition
+    /// </summary>
     public Dependency? Read(Func<Dependency, bool> filter)
     {
         Dependency? dep=DataSource.Dependencies.FirstOrDefault(filter);
@@ -38,7 +47,9 @@ internal class DependencyImplementation : IDependency
             throw new DalDoesNotExistException("This dependency does Not exist");
         return dep;
     }
-
+    /// <summary>
+    /// read all dependencies
+    /// </summary>
     public IEnumerable<Dependency?> ReadAll(Func<Dependency?, bool>? filter = null) //stage 2
     {
         if (filter == null)
@@ -46,7 +57,9 @@ internal class DependencyImplementation : IDependency
         else
             return DataSource.Dependencies.Where(filter);
     }
-
+    /// <summary>
+    /// update dependency
+    /// </summary>
     public void Update(Dependency item)
     {
         int find=  DataSource.Dependencies.RemoveAll(dep=>dep.Id == item.Id);
