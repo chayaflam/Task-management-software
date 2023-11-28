@@ -8,10 +8,10 @@ namespace Dal;
 
 internal class TaskImplementation : ITask
 {
-    const string s_Task = "task";
+    const string s_Task = "tasks";
     public int Create(DO.Task item)
     {
-        List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_Task)!;
+        List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_Task);
         int id = Config.NextTaskId;
         DO.Task task = item with { Id = id };
         listTask.Add(task);

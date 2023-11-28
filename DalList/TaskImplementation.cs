@@ -1,9 +1,12 @@
-﻿namespace Dal;
+﻿//namespace Dal;
+//using DalApi;
+//using DO;
+//using System.Collections.Generic;
+//using System.Linq;
+namespace Dal;
 using DalApi;
 using DO;
 using System.Collections.Generic;
-using System.Linq;
-
 /// <summary>
 /// Task implementation
 /// </summary>

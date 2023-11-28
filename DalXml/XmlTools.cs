@@ -82,6 +82,7 @@ static class XMLTools
         {
             using FileStream file = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
             new XmlSerializer(typeof(List<T>)).Serialize(file, list);
+           // file.Close();
             //new XmlSerializer(typeof(List<T?>)).Serialize(file, list);
 
         }

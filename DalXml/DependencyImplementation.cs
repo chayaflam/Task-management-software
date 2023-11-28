@@ -6,7 +6,7 @@ namespace Dal;
 
 internal class DependencyImplementation : IDependency
 {
-    string s_Dependency = "dependency";
+    string s_Dependency = "dependencies";
     public int Create(Dependency item)
     {
         List<DO.Dependency> listDep = XMLTools.LoadListFromXMLSerializer<Dependency>(s_Dependency)!;

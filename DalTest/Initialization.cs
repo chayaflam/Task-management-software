@@ -14,13 +14,15 @@ public static class Initialization
     {
         IEnumerable<Engineer> engineers = s_dal!.Engineer.ReadAll()!;
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 10; i++)
         {
             DateTime startDate = DateTime.Now;
             DateTime deadline = startDate.AddDays(40);
             DateTime endDate = startDate.AddDays(s_random.Next(10, 40));
+            //
             int engId = engineers.ElementAt(s_random.Next(0, engineers.Count())).Id;
-            EngineerExperience level = (EngineerExperience)s_random.Next(0, 4);
+            //int engId = 123;
+            EngineerExperience level = (EngineerExperience)s_random.Next(1, 4);
             DO.Task newTask = new("fun task", "task alias", true, null,
                 startDate, null, deadline, endDate, null, null, engId, level);
             s_dal!.Task.Create(newTask);
@@ -83,7 +85,7 @@ public static class Initialization
                 id = s_random.Next(100000000, 999999999);
             while (s_dal!.Engineer.Read(id) != null);
             string email = $"{eng}@gmail.com";
-            EngineerExperience level = (EngineerExperience)s_random.Next(0, 4);
+            EngineerExperience level = (EngineerExperience)s_random.Next(1, 4);
             int cost=s_random.Next(100, 500);
             Engineer newEngineer=new(id,eng,email,level,cost);
             s_dal!.Engineer.Create(newEngineer);
@@ -96,7 +98,7 @@ public static class Initialization
     private static void createDependency()
     {
         IEnumerable<DO.Task> tasks = s_dal!.Task.ReadAll()!;
-        for (int i = 0; i < 250; i++)
+        for (int i = 0; i < 20; i++)
         {
             int taskId = tasks.ElementAt(s_random.Next(0, tasks.Count())).Id;
             int dependOnTask = tasks.ElementAt(s_random.Next(0, tasks.Count())).Id;

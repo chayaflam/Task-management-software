@@ -1,6 +1,6 @@
 ﻿
 
-using System.Data;
+
 
 namespace DO;
 /// <summary>
@@ -38,6 +38,6 @@ public record Task
 )
 {
     public int Id;
-    public Task() : this( "", "",null, null, null,null,null,null,"","",0,0) { } //empty ctor for stage 3
+     public  Task() : this( "", "",null, null, null,null,null,null,"","",0,0) { } //empty ctor for stage 3
 };
 
