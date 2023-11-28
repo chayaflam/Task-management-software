@@ -9,6 +9,9 @@ namespace Dal;
 internal class TaskImplementation : ITask
 {
     const string s_Task = "tasks";
+    /// <summary>
+    /// create task
+    /// </summary>
     public int Create(DO.Task item)
     {
         List<DO.Task> listTask = XMLTools.LoadListFromXMLSerializer<DO.Task>(s_Task);
