@@ -1,23 +1,18 @@
 ﻿
 
 using DalApi;
+using System.Diagnostics;
+
 namespace Dal;
 
 sealed internal class DalXml : IDal
 {
-static private IDal? instance;
-public static IDal Instance { get; } = (new Lazy<DalXml>()).Value;
-    //{ get
-    //    {
-    //        if (instance == null)
-    //            lock (instance!)
-    //            { instance = new Lazy<DalXml>().Value; }
-    //        return instance;
-    //    }
 
+    public static IDal Instance { get; } = new Lazy<DalXml>(()=>new DalXml(),true).Value;
 
-    private DalXml() { }
+   private DalXml() { }
     public IEngineer Engineer => new EngineerImplementation();
     public ITask Task => new TaskImplementation();
     public IDependency Dependency => new DependencyImplementation();
+
 }

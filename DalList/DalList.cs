@@ -1,11 +1,12 @@
 ﻿
 using DalApi;
+using System.Data.SqlTypes;
 
 namespace Dal;
 
 sealed internal class DalList : IDal
 {
-    public static IDal Instance { get; } = new DalList();
+    public static IDal Instance { get; } = new Lazy<DalList>(() => new DalList(),true).Value;
     private DalList() { }
 
     public IEngineer Engineer => new EngineerImplementation();

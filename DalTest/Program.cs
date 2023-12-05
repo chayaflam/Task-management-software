@@ -15,9 +15,11 @@ namespace DalTest
     internal class Program
     {
         //static readonly IDal s_dal = new DalList(); //stage 2
-        static readonly IDal s_dal = new Dal.DalXml();//stage 3
+        //static readonly IDal s_dal = new Dal.DalXml();//stage 3
+        static readonly IDal s_dal = Factory.Get; //stage 4
 
-        
+
+
 
         /// <summary>
         /// Prints the actions menu of a particular entity
