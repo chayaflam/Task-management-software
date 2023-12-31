@@ -212,7 +212,13 @@ namespace DalTest
             bool milestone;
             bool.TryParse( Console.ReadLine()!,out milestone);
             DateTime createdAt=DateTime.Now;
-            Console.WriteLine("enter task ForecastDate");
+            Console.WriteLine("enter task scheduledDate");
+            DateTime scheduledDate;
+            DateTime.TryParse(Console.ReadLine()!, out scheduledDate);
+            Console.WriteLine("enter task required effort time");
+            TimeSpan requiredEffortTime;
+            TimeSpan.TryParse(Console.ReadLine(), out requiredEffortTime);
+            Console.WriteLine("enter task forecast date");
             DateTime forecastDate;
             DateTime.TryParse(Console.ReadLine()!, out forecastDate);
             Console.WriteLine("enter task Deadline");
@@ -228,8 +234,8 @@ namespace DalTest
             Console.WriteLine("enter task ComplexityLevel");
             EngineerExperience complexityLevel;
             EngineerExperience.TryParse(Console.ReadLine()!, out complexityLevel);
-            DO.Task task = new(description, alias, milestone, createdAt,
-                null, forecastDate, deadline, null, deliverables, remarks, engineerId, complexityLevel);
+            DO.Task task = new(description, alias, milestone, createdAt,  requiredEffortTime,
+                null,scheduledDate ,forecastDate, deadline, null, deliverables, remarks, engineerId, complexityLevel);
             Console.WriteLine("The Id is: " + s_dal!.Task.Create(task));
         }
         /// <summary>
@@ -271,9 +277,15 @@ namespace DalTest
             Console.WriteLine("enter task Milestone");
             bool milestone;
             bool.TryParse(Console.ReadLine()!, out milestone);
+            Console.WriteLine("enter task required effort time");
+            TimeSpan requiredEffortTime;
+            TimeSpan.TryParse(Console.ReadLine(), out requiredEffortTime);
             Console.WriteLine("enter task StartDate");
             DateTime StartDate;
             DateTime.TryParse(Console.ReadLine()!, out StartDate);
+            Console.WriteLine("enter task scheduledDate");
+            DateTime scheduledDate;
+            DateTime.TryParse(Console.ReadLine()!, out scheduledDate);
             Console.WriteLine("enter task ForecastDate");
             DateTime forecastDate;
             DateTime.TryParse(Console.ReadLine()!, out forecastDate);
@@ -296,7 +308,9 @@ namespace DalTest
             DO.Task newTsk = new((string.IsNullOrEmpty(description) ? task.Description : description),
                 (string.IsNullOrEmpty(alias) ? task.Alias : alias),
                 milestone ? true : milestone, task.CreatedAt,
+                requiredEffortTime==TimeSpan.Zero?task.RequiredEffortTime:requiredEffortTime,
                 (StartDate.Year == 0001 ? task.Start : StartDate),
+                (scheduledDate.Year == 0001 ? task.ScheduledDate : scheduledDate),
                 (forecastDate.Year == 0001 ? task.ForecastDate : forecastDate),
                 (deadline.Year == 0001 ? task.Deadline : deadline),
                 (CompleteDate.Year == 0001 ? task.Complete : CompleteDate),
