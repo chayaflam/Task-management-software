@@ -63,7 +63,8 @@ internal class DependencyImplementation : IDependency
     public void Update(Dependency item)
     {
         int find=  DataSource.Dependencies.RemoveAll(dep=>dep.Id == item.Id);
-        if (find == 0) throw new DalDoesNotExistException($"Dependency with ID={item.Id} does Not exist");
+        if (find == 0) 
+            throw new DalDoesNotExistException($"Dependency with ID={item.Id} does Not exist");
         else
             DataSource.Dependencies.Add(item);
     }

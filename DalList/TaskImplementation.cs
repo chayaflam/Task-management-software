@@ -62,7 +62,8 @@ internal class TaskImplementation : ITask
     public void Update(Task item)
     {
         int find = DataSource.Tasks.RemoveAll(task => task.Id == item.Id);
-        if (find == 0) throw new DalDoesNotExistException($"Task with ID={item.Id} does Not exist");
+        if (find == 0)
+            throw new DalDoesNotExistException($"Task with ID={item.Id} does Not exist");
         else
             DataSource.Tasks.Add(item);
     }

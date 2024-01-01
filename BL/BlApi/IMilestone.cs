@@ -3,6 +3,6 @@ namespace BlApi;
 public interface IMilestone
 {
     BO.Milestone? Read(int id);
-    IEnumerable<BO.Milestone> Create(IEnumerable<BO.Task> tasks);
-    void Update(BO.Milestone item);
+    IEnumerable<BO.Milestone> CreateSchedule(DateTime startProject, DateTime finishProject);
+    void Update(BO.Milestone milestone);
 }
