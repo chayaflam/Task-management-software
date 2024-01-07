@@ -1,0 +1,16 @@
+﻿<Window x:Class="PL.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PL"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <!--handle engineer-->
+        <Button Content="Handle Engineer" HorizontalAlignment="Left" Margin="218,263,0,0" VerticalAlignment="Top" Height="42" Width="99" Click="ShowEngineerList"/>
+        <!--data init -->
+        <Button Content="DB init" HorizontalAlignment="Left"  Margin="447,263,0,0" Height="42" Width="99" VerticalAlignment="Top" Click="initEngineerDB"/>
+
+    </Grid>
+</Window>

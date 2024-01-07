@@ -14,7 +14,7 @@ namespace BlImplementation;
 /// </summary>
 internal class EngineerImplementation : IEngineer
 {
-    private DalApi.IDal _dal = Factory.Get;
+    private DalApi.IDal _dal = DalApi.Factory.Get;
     /// <summary>
     /// Create DO engineer from BO engineer object
     /// </summary>
@@ -93,9 +93,9 @@ internal class EngineerImplementation : IEngineer
     /// </summary>
     /// <param name="filter">A condition for calling an engineer--optional</param>
     /// <returns>The list of engineers meeting the condition</returns>
-    public IEnumerable<BO.Engineer?> ReadAll(Func<BO.Engineer?, bool>? filter = null)
+    public IEnumerable<BO.Engineer?> ReadAll(Func<DO.Engineer?, bool>? filter = null)
     {
-        return (from DO.Engineer doEngineer in _dal.Engineer.ReadAll((Func<DO.Engineer?, bool>?)filter )
+        IEnumerable<BO.Engineer> allEngineers =(from DO.Engineer doEngineer in _dal.Engineer.ReadAll(filter )
                 select new BO.Engineer
                 {
                     Id = doEngineer.Id,
@@ -103,16 +103,19 @@ internal class EngineerImplementation : IEngineer
                     Email = doEngineer.Email!,
                     Level = (BO.EngineerExperience)doEngineer.Level!,
                     Cost = (double)doEngineer.Cost!,
-                    Task = (BO.TaskInEngineer)(from DO.Task doTask in _dal.Task.ReadAll()
+                    Task = (from DO.Task doTask in _dal.Task.ReadAll()
                                                where doTask.EngineerId == doEngineer.Id
                                                select new BO.TaskInEngineer()
                                                {
                                                    Id = doTask.Id,
                                                    Alias = doTask.Alias
-                                               })
+                                               }).FirstOrDefault()
                 }
-                );
-    }
+                );;
+        return allEngineers;
+
+
+}
     /// <summary>
     /// Update data to the requested engineer
     /// </summary>

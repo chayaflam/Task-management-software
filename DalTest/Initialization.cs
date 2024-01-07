@@ -23,11 +23,12 @@ public static class Initialization
             int engId = engineers.ElementAt(s_random.Next(0, engineers.Count())).Id;
             //int engId = 123;
             EngineerExperience level = (EngineerExperience)s_random.Next(1, 4);
-            DO.Task newTask = new("fun task", "task alias", true, null,
-                startDate, null, deadline, endDate, null, null, engId, level);
+            DO.Task newTask = new("fun task", "task alias",false,new(), null,
+                startDate, null,null, deadline, endDate, null, null, engId, level);
             s_dal!.Task.Create(newTask);
         }
     }
+   
     /// <summary>
     /// create engineers list
     /// </summary>
@@ -112,9 +113,12 @@ public static class Initialization
     /// <param name="dalDependency">Dependency interface</param>
     /// <param name="dalEngineer">Engineer interface</param>
     /// <param name="dalTask">Task interface</param>
-    public static void Do(IDal dal)
+    /// 
+    //public static void Do(IDal dal) //stage 2
+    public static void Do()
     {
-        s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
+        //s_dal = dal ?? throw new NullReferenceException("DAL object can not be null!"); //stage 2
+        s_dal = DalApi.Factory.Get;
         createEngineer();
         createTask();
         createDependency();

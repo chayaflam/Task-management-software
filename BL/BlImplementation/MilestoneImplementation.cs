@@ -11,7 +11,7 @@ namespace BlImplementation;
 /// </summary>
 internal class MilestoneImplementation :IMilestone
 {
-    private DalApi.IDal _dal = Factory.Get;
+    private DalApi.IDal _dal = DalApi.Factory.Get;
     /// <summary>
     /// Creating a project schedule
     /// </summary>
@@ -20,14 +20,14 @@ internal class MilestoneImplementation :IMilestone
     /// <returns>List of dependencies between milestones and tasks</returns>
     public IEnumerable<BO.Milestone> CreateSchedule(DateTime startProject,DateTime finishProject)
     {
-       IEnumerable< DO.Dependency?> allDependencies = _dal.Dependency.ReadAll();
-        var dependenciesList = from DO.Dependency doDep in allDependencies
-                               group doDep by doDep.DependsOnTask into depList
-                               orderby depList.Key
-                               select new { key = depList.Key, value = depList.ToList() };
+        //IEnumerable< DO.Dependency?> allDependencies = _dal.Dependency.ReadAll();
+        // var dependenciesList = from DO.Dependency doDep in allDependencies
+        //                        group doDep by doDep.DependsOnTask into depList
+        //                        orderby depList.Key
+        //                        select new { key = depList.Key, value = depList.ToList() };
 
-        dependenciesList=dependenciesList.Distinct();
-
+        // dependenciesList=dependenciesList.Distinct();
+        return null;
     }
     /// <summary>
     /// Calling for the desired milestone

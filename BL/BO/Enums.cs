@@ -11,7 +11,8 @@ public enum EngineerExperience
     Beginner,
     Competent,
     Proficient,
-    Expert
+    Expert,
+    None
 }
 
 

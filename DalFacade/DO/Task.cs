@@ -39,7 +39,9 @@ public record Task
      EngineerExperience ComplexityLevel
 )
 {
-    public int Id;
-     public  Task() : this( "", "",false,new(),null, null,null,null,null,null,null,null,null,0) { } //empty ctor for stage 3
-};
 
+    public int Id;
+    public  Task() : this( "", "",false,new(),null, null,null,null,null,null,null,null,null,0) { } //empty ctor for stage 3
+
+ 
+}

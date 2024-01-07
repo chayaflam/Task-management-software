@@ -8,7 +8,7 @@ namespace BlImplementation;
 /// </summary>
 internal class TaskImplementation : ITask
 {
-    private DalApi.IDal _dal = Factory.Get;
+    private DalApi.IDal _dal = DalApi.Factory.Get;
     /// <summary>
     /// Create DO task from BO task object
     /// </summary>
@@ -147,7 +147,7 @@ internal class TaskImplementation : ITask
                                                            Id = doDependency.DependentTask,
                                                            Description = allTasks.FirstOrDefault(task => task.Id == doDependency.DependentTask)!.Description,
                                                            Alias = allTasks.FirstOrDefault(task => task.Id == doDependency.DependentTask)!.Alias,
-                                                           Status = setStatus(allTasks.FirstOrDefault(task => task.Id == doDependency.DependentTask)!.Id)
+                                                           Status = (BO.Status)setStatus(allTasks.FirstOrDefault(task => task.Id == doDependency.DependentTask)!.Id)
                                                        };
         BO.MilestoneInTask? taskMilestone = (from DO.Dependency doDependency in _dal.Dependency.ReadAll()
                                              where (doDependency.DependentTask == doTask.Id
