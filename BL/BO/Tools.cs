@@ -5,20 +5,23 @@ namespace BO;
 
 public static class Tools<T> 
 {
-   /* Type type = typeof(T);
-    static string? ToStringProperty()
+    /* Type type = typeof(T);
+     static string? ToStringProperty()
+     {
+         return this.ToString();
+     }
+ */
+    public static string ToStringProperty<T>(T item)
     {
-        return this.ToString();
-    }
-*/
-    public static string ToStringProperty()
-    {
-        string s = "";
-        Type type = typeof(T);
-        foreach (PropertyInfo prop in type.GetProperties())
+        string result=""; 
+        foreach (PropertyInfo prop in item.GetType().GetProperties())
         {
-            s += $"{prop.Name} : {type.GetProperty(prop.Name)?.GetValue(prop)}";
+            result += prop.Name;
+            result += " ";
+            result += item.GetType().GetProperty(prop.Name)?.GetValue(item);
+            result += "\n";
         }
-        return s;
+        return result;
+
     }
 }

@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 
 namespace PL;
+/// <summary>
+/// enums of  engineers level
+/// </summary>
 internal class EngineerExperienceCollection : IEnumerable
 {
     static readonly IEnumerable<BO.EngineerExperience> e_enums =

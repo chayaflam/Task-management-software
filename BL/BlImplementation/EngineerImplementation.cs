@@ -28,7 +28,15 @@ internal class EngineerImplementation : IEngineer
            boEngineer.Email == "" || boEngineer.Email == null || boEngineer.Cost <= 0)
             throw new BO.BlInvalidValuesException("invalid values");
         DO.Engineer doEngineer = new DO.Engineer
-         (boEngineer.Id,boEngineer.Name,boEngineer.Email,(DO.EngineerExperience?)boEngineer.Level,boEngineer.Cost);
+         (boEngineer.Id, boEngineer.Name, boEngineer.Email, (DO.EngineerExperience?)boEngineer.Level, boEngineer.Cost);
+        if (boEngineer.Task is not null)
+        {
+            DO.Task? task = _dal.Task.Read(boEngineer.Task.Id) ??
+                throw new BO.BlDoesNotExistException($"Task with ID={boEngineer.Task.Id} does Not exist");
+            //if (task.EngineerId is null)
+                _dal.Task.Update(task with { EngineerId = boEngineer.Id });
+            //else throw new BO.BlAlreadyExistsException($"There is already an engineer responsible for task with ID={task.Id}");////////////;
+        }
         try
         {
             int idEngineer = _dal.Engineer.Create(doEngineer);
@@ -38,6 +46,8 @@ internal class EngineerImplementation : IEngineer
         {
             throw new BO.BlAlreadyExistsException($"Engineer with ID={boEngineer.Id} already exists", ex);
         }
+
+
     }
     /// <summary>
     /// Deleting an engineer from the system
@@ -64,7 +74,7 @@ internal class EngineerImplementation : IEngineer
         catch (DO.DalDoesNotExistException ex)
         {
 
-            throw new BO.BlDoesNotExistException($"Engineer with ID={id} does Not exist",ex);
+            throw new BO.BlDoesNotExistException($"Engineer with ID={id} does Not exist", ex);
         }
     }
     /// <summary>
@@ -86,6 +96,13 @@ internal class EngineerImplementation : IEngineer
             Email = doEngineer!.Email!,
             Level = (BO.EngineerExperience)doEngineer.Level!,
             Cost = (double)doEngineer.Cost!,
+            Task = (from DO.Task doTask in _dal.Task.ReadAll()
+                    where doTask.EngineerId == doEngineer.Id
+                    select new BO.TaskInEngineer()
+                    {
+                        Id = doTask.Id,
+                        Alias = doTask.Alias
+                    }).FirstOrDefault()
         };
     }
     /// <summary>
@@ -95,27 +112,24 @@ internal class EngineerImplementation : IEngineer
     /// <returns>The list of engineers meeting the condition</returns>
     public IEnumerable<BO.Engineer?> ReadAll(Func<DO.Engineer?, bool>? filter = null)
     {
-        IEnumerable<BO.Engineer> allEngineers =(from DO.Engineer doEngineer in _dal.Engineer.ReadAll(filter )
-                select new BO.Engineer
-                {
-                    Id = doEngineer.Id,
-                    Name = doEngineer.Name!,
-                    Email = doEngineer.Email!,
-                    Level = (BO.EngineerExperience)doEngineer.Level!,
-                    Cost = (double)doEngineer.Cost!,
-                    Task = (from DO.Task doTask in _dal.Task.ReadAll()
-                                               where doTask.EngineerId == doEngineer.Id
-                                               select new BO.TaskInEngineer()
-                                               {
-                                                   Id = doTask.Id,
-                                                   Alias = doTask.Alias
-                                               }).FirstOrDefault()
-                }
-                );;
+        IEnumerable<BO.Engineer> allEngineers = (from DO.Engineer doEngineer in _dal.Engineer.ReadAll(filter)
+                                                 select new BO.Engineer
+                                                 {
+                                                     Id = doEngineer.Id,
+                                                     Name = doEngineer.Name!,
+                                                     Email = doEngineer.Email!,
+                                                     Level = (BO.EngineerExperience)doEngineer.Level!,
+                                                     Cost = (double)doEngineer.Cost!,
+                                                     Task = (from DO.Task doTask in _dal.Task.ReadAll()
+                                                             where doTask.EngineerId == doEngineer.Id
+                                                             select new BO.TaskInEngineer()
+                                                             {
+                                                                 Id = doTask.Id,
+                                                                 Alias = doTask.Alias
+                                                             }).FirstOrDefault()
+                                                 }  );
         return allEngineers;
-
-
-}
+    }
     /// <summary>
     /// Update data to the requested engineer
     /// </summary>
@@ -131,11 +145,20 @@ internal class EngineerImplementation : IEngineer
              (boEngineer.Id, boEngineer.Name, boEngineer.Email, (DO.EngineerExperience?)boEngineer.Level, boEngineer.Cost);
         try
         {
-            _dal.Engineer.Update(doEngineer);
+            DO.Task? task;
+            if (boEngineer?.Task is not null)
+            {
+                task = _dal.Task.Read(boEngineer.Task.Id);
+                _dal!.Task.Update(task! with { EngineerId = boEngineer.Id });
+
+            }
+            _dal!.Engineer.Update(doEngineer);
         }
         catch (DO.DalDoesNotExistException ex)
         {
-            throw new BO.BlDoesNotExistException($"Engineer with ID={boEngineer.Id} does Not exist",ex);
+            throw new BO.BlDoesNotExistException($"Engineer with ID={boEngineer.Id} does Not exist", ex);
         }
     }
 }
+
+    
