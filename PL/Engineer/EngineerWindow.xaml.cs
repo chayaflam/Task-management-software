@@ -50,9 +50,13 @@ public partial class EngineerWindow : Window
                 Email = "",
                 Level = 0,
                 Cost = 0,
-                Task = new BO.TaskInEngineer { Id = 0, Alias = "" }
+               Task = new BO.TaskInEngineer { Id = 0, Alias = "" }
             }
            : s_bl.Engineer.Read(CurrentEngineerId)!;
+            if (CurrentEngineer.Task == null)
+            {
+                CurrentEngineer.Task = new BO.TaskInEngineer { Id = 0, Alias = "" };
+            }
         }
 
         catch (Exception ex)
@@ -84,15 +88,9 @@ public partial class EngineerWindow : Window
 
             }
             this.Close();
-            
-          
         }
- 
         catch (BO.BlAlreadyExistsException ex) { MessageBox.Show(ex.Message, "Save Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         catch (BO.BlInvalidValuesException ex) { MessageBox.Show(ex.Message, "Save Error", MessageBoxButton.OK, MessageBoxImage.Error); }
         catch (BO.BlDoesNotExistException ex) { MessageBox.Show(ex.Message, "Save Error", MessageBoxButton.OK, MessageBoxImage.Error); }
-
     }
-
-
 }

@@ -89,7 +89,7 @@ internal class EngineerImplementation : IEngineer
         if (doEngineer == null)
             throw new BO.BlDoesNotExistException($"Engineer with ID={id} does Not exist");
 
-        return new BO.Engineer()
+        BO.Engineer a= new BO.Engineer()
         {
             Id = id,
             Name = doEngineer!.Name!,
@@ -104,6 +104,7 @@ internal class EngineerImplementation : IEngineer
                         Alias = doTask.Alias
                     }).FirstOrDefault()
         };
+        return a;
     }
     /// <summary>
     /// Reading all or part of the engineers from DO
