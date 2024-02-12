@@ -25,6 +25,10 @@ public partial class TaskListWindow : Window
     /// object access to BL
     /// </summary>
     static readonly BlApi.IBl s_bl = BlApi.Factory.Get();
+    /// <summary>
+    /// Initialize the search condition variable
+    /// </summary>
+    public BO.EngineerExperience? taskCopmlexity { get; set; } = BO.EngineerExperience.None;
     public TaskListWindow()
     {
         InitializeComponent();
@@ -57,4 +61,62 @@ public partial class TaskListWindow : Window
     /// </summary>
     public static readonly DependencyProperty TaskListProperty =
         DependencyProperty.Register("TaskList", typeof(ObservableCollection<BO.TaskInList>), typeof(TaskListWindow), new PropertyMetadata(null));
+
+    private void FilteringTask(object sender, SelectionChangedEventArgs e)
+    {
+        var temp = taskCopmlexity == BO.EngineerExperience.None ?
+               (from BO.Task boTask in s_bl.Task.ReadAll()
+                select new BO.TaskInList()
+                {
+                    Id = boTask.Id,
+                    Description = boTask.Description,
+                    Alias = boTask.Alias,
+                    Status = boTask.Status
+                }) :
+                (from BO.Task boTask in s_bl.Task.ReadAll(item => (int?)item!.ComplexityLevel == (int?)taskCopmlexity)
+                 select new BO.TaskInList()
+                 {
+                     Id = boTask.Id,
+                     Description = boTask.Description,
+                     Alias = boTask.Alias,
+                     Status = boTask.Status
+                 });
+        TaskList = temp == null ? new() : new(temp!);
+    }
+    /// <summary>
+    /// Opening a window to add an task
+    /// </summary>
+    /// <param name="sender">The control for which the action is intended</param>
+    /// <param name="e">Event handlers at the source of the event</param>
+    private void AddTask(object sender, RoutedEventArgs e)
+    {
+        new TaskWindow().ShowDialog();
+
+        var temp = (from BO.Task boTask in s_bl.Task.ReadAll()
+                    select new BO.TaskInList()
+                    {
+                        Id = boTask.Id,
+                        Description = boTask.Description,
+                        Alias = boTask.Alias,
+                        Status = boTask.Status
+                    });
+        TaskList = temp == null ? new() : new(temp!);
+    }
+    /*private void UpdateTask(object sender, RoutedEventArgs e)
+    {
+        BO.TaskInList? updateTask = (sender as ListView)?.SelectedItem as BO.TaskInList;
+
+        new TaskWindow(updateTask!.Id).ShowDialog();
+
+        var temp = (from BO.Task boTask in s_bl.Task.ReadAll()
+                    select new BO.TaskInList()
+                    {
+                        Id = boTask.Id,
+                        Description = boTask.Description,
+                        Alias = boTask.Alias,
+                        Status = boTask.Status
+                    });
+        TaskList = temp == null ? new() : new(temp!);
+
+    }*/
 }

@@ -147,7 +147,7 @@ internal class EngineerImplementation : IEngineer
         try
         {
             DO.Task? task;
-            if (boEngineer?.Task is not null)
+            if (boEngineer?.Task!.Id!=0 )
             {
                 task = _dal.Task.Read(boEngineer.Task.Id);
                 _dal!.Task.Update(task! with { EngineerId = boEngineer.Id });

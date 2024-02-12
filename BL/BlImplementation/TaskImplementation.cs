@@ -71,11 +71,32 @@ internal class TaskImplementation : ITask
     /// </summary>
     /// <param name="filter">A condition for calling an task--optional</param>
     /// <returns>The list of tasks meeting the condition</returns>
-    public IEnumerable<BO.Task?> ReadAll(Func<BO.Task?, bool>? filter = null)
+    public IEnumerable<BO.Task?> ReadAll(Func<DO.Task?, bool>? filter = null)
     {
-        return (from DO.Task doTask in _dal.Task.ReadAll((Func<DO.Task?, bool>?)filter)
-                select ConvertTaskFromDOtoBO(doTask));
+        IEnumerable<BO.Task> allTask = (from DO.Task doTask in _dal.Task.ReadAll(filter)
+                                       select ConvertTaskFromDOtoBO(doTask));
+        return allTask;
+              /*return (from DO.Task doTask in _dal.Task.ReadAll((Func<DO.Task?, bool>?)filter)
+                select ConvertTaskFromDOtoBO(doTask));*/
     }
+/*
+    IEnumerable<BO.Engineer> allEngineers = (from DO.Engineer doEngineer in _dal.Engineer.ReadAll(filter)
+                                             select new BO.Engineer
+                                             {
+                                                 Id = doEngineer.Id,
+                                                 Name = doEngineer.Name!,
+                                                 Email = doEngineer.Email!,
+                                                 Level = (BO.EngineerExperience)doEngineer.Level!,
+                                                 Cost = (double)doEngineer.Cost!,
+                                                 Task = (from DO.Task doTask in _dal.Task.ReadAll()
+                                                         where doTask.EngineerId == doEngineer.Id
+                                                         select new BO.TaskInEngineer()
+                                                         {
+                                                             Id = doTask.Id,
+                                                             Alias = doTask.Alias
+                                                         }).FirstOrDefault()
+                                             });
+        return allEngineers;*/
     /// <summary>
     /// Update data to the requested task
     /// </summary>
