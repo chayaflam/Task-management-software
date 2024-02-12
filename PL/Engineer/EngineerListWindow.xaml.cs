@@ -124,8 +124,8 @@ public partial class EngineerListWindow : Window
 
     }
 
-    /*private void UpdateEngineer(object sender, MouseButtonEventArgs e)
+    private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
 
-    }*/
+    }
 }
