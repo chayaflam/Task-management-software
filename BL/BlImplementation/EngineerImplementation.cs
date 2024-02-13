@@ -176,7 +176,7 @@ internal class EngineerImplementation : IEngineer
         if (unfinishedTask != null && boEngineer!.Task!.Id != unfinishedTask.Id)
             throw new BO.BlInvalidValuesException("It is not possible to update a task before its completion");
         DO.Task? taskEngineer = _dal.Task.Read(boEngineer.Task.Id);
-        if (taskEngineer!.EngineerId !=0)
+        if (taskEngineer!=null&& taskEngineer.Id!= boEngineer.Task.Id)
             throw new BO.BlInvalidValuesException($"There is already an engineer for task with ID={boEngineer.Task.Id}");
         
     }
