@@ -8,6 +8,9 @@
         Title="TaskListWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
     <Grid>
+        <Grid.Background>
+            <ImageBrush  ImageSource="../image/leadspace.jfif" />
+        </Grid.Background>
         <!--external grid-->
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
@@ -30,7 +33,7 @@
         </Grid>
         
         <!--tasks list-->
-        <ListView  Margin="5,10,5,0" Grid.Row="1" ItemsSource="{Binding Path=TaskList }"  >
+        <ListView  Margin="5,10,5,0" Grid.Row="1" ItemsSource="{Binding Path=TaskList }" MouseDoubleClick="UpdateTask" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>

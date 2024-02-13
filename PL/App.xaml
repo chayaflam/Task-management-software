@@ -8,6 +8,7 @@
         <local:taskCopmlexityCollection x:Key="TaskCopmlexityCollectionKey" />
         <local:ConvertIdToContent x:Key="ConverIdToContentKey"/>
         <local:ConvertIdToBool x:Key="ConvertIdToBoolKey"/>
+       
     </Application.Resources>
 </Application>
 

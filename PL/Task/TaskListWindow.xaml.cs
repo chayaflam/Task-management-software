@@ -32,15 +32,6 @@ public partial class TaskListWindow : Window
     public TaskListWindow()
     {
         InitializeComponent();
-        /* var temp = (from BO.Task boTask in s_bl.Task.ReadAll()
-                     select new BO.TaskInList()
-                     {
-                         Id = boTask.Id,
-                         Description = boTask.Description,
-                         Alias = boTask.Alias,
-                        Status = boTask.Status,
-                     });
-         TaskList = temp == null ? new() : new(temp!);*/
         var temp = (from BO.Task boTask in s_bl.Task.ReadAll()
                     select new BO.TaskInList()
                     {
@@ -61,7 +52,11 @@ public partial class TaskListWindow : Window
     /// </summary>
     public static readonly DependencyProperty TaskListProperty =
         DependencyProperty.Register("TaskList", typeof(ObservableCollection<BO.TaskInList>), typeof(TaskListWindow), new PropertyMetadata(null));
-
+    /// <summary>
+    /// Filter tasks by complexity
+    /// </summary>
+    /// <param name="sender">The control for which the action is intended</param>
+    /// <param name="e">Event handlers at the source of the event</param>
     private void FilteringTask(object sender, SelectionChangedEventArgs e)
     {
         var temp = taskCopmlexity == BO.EngineerExperience.None ?
@@ -91,7 +86,6 @@ public partial class TaskListWindow : Window
     private void AddTask(object sender, RoutedEventArgs e)
     {
         new TaskWindow().ShowDialog();
-
         var temp = (from BO.Task boTask in s_bl.Task.ReadAll()
                     select new BO.TaskInList()
                     {
@@ -102,7 +96,12 @@ public partial class TaskListWindow : Window
                     });
         TaskList = temp == null ? new() : new(temp!);
     }
-    /*private void UpdateTask(object sender, RoutedEventArgs e)
+    /// <summary>
+    /// Opening a window to  Update an task
+    /// </summary>
+    /// <param name="sender">The control for which the action is intended</param>
+    /// <param name="e">Event handlers at the source of the event.</param>
+    private void UpdateTask(object sender, RoutedEventArgs e)
     {
         BO.TaskInList? updateTask = (sender as ListView)?.SelectedItem as BO.TaskInList;
 
@@ -118,5 +117,5 @@ public partial class TaskListWindow : Window
                     });
         TaskList = temp == null ? new() : new(temp!);
 
-    }*/
+    }
 }

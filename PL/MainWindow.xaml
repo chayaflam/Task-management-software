@@ -5,8 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PL"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        >
+  
     <Grid>
+        <Grid.Background>
+            <ImageBrush  ImageSource="image/leadspace.jfif" />
+        </Grid.Background>
         <!--data init -->
         <Button Content="DB init" HorizontalAlignment="Center"  Margin="0,110,0,0" Height="42" Width="177" VerticalAlignment="Top" Click="initEngineerDB"/>
         <!--handle engineer-->

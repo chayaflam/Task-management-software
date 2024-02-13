@@ -19,7 +19,7 @@ internal class TaskImplementation : ITask
     public int Create(Task item)
     {
         int id = DataSource.Config.NextTaskId;
-        DO.Task task =item with { Id=id};
+        DO.Task task =item with { Id=id,CreatedAt=DateTime.Now};
         DataSource.Tasks.Add(task);
         return id;
     }
@@ -61,7 +61,6 @@ internal class TaskImplementation : ITask
     /// </summary>
     public void Update(Task item)
     {
-        //להפסיק משימה באמצע או לא לאפשר עדכון משימה
         int find = DataSource.Tasks.RemoveAll(task => task.Id == item.Id);
         if (find == 0)
             throw new DalDoesNotExistException($"Task with ID={item.Id} does Not exist");

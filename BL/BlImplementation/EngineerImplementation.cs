@@ -29,13 +29,11 @@ internal class EngineerImplementation : IEngineer
             throw new BO.BlInvalidValuesException("invalid values");
         DO.Engineer doEngineer = new DO.Engineer
          (boEngineer.Id, boEngineer.Name, boEngineer.Email, (DO.EngineerExperience?)boEngineer.Level, boEngineer.Cost);
-        if (boEngineer.Task is not null)
+        if (boEngineer!.Task!.Id!=0)
         {
             DO.Task? task = _dal.Task.Read(boEngineer.Task.Id) ??
                 throw new BO.BlDoesNotExistException($"Task with ID={boEngineer.Task.Id} does Not exist");
-            //if (task.EngineerId is null)
-                _dal.Task.Update(task with { EngineerId = boEngineer.Id });
-            //else throw new BO.BlAlreadyExistsException($"There is already an engineer responsible for task with ID={task.Id}");////////////;
+            _dal.Task.Update(task with { EngineerId = boEngineer.Id });
         }
         try
         {
@@ -89,7 +87,7 @@ internal class EngineerImplementation : IEngineer
         if (doEngineer == null)
             throw new BO.BlDoesNotExistException($"Engineer with ID={id} does Not exist");
 
-        BO.Engineer a= new BO.Engineer()
+        BO.Engineer a = new BO.Engineer()
         {
             Id = id,
             Name = doEngineer!.Name!,
@@ -128,7 +126,7 @@ internal class EngineerImplementation : IEngineer
                                                                  Id = doTask.Id,
                                                                  Alias = doTask.Alias
                                                              }).FirstOrDefault()
-                                                 }  );
+                                                 });
         return allEngineers;
     }
     /// <summary>
@@ -142,14 +140,18 @@ internal class EngineerImplementation : IEngineer
         if (boEngineer.Id <= 0 || boEngineer.Name == "" ||
            boEngineer.Email == "" || boEngineer.Cost <= 0)
             throw new BO.BlInvalidValuesException("invalid values");
+
         DO.Engineer doEngineer = new DO.Engineer
              (boEngineer.Id, boEngineer.Name, boEngineer.Email, (DO.EngineerExperience?)boEngineer.Level, boEngineer.Cost);
         try
         {
+            engineerTaskCanUpdated(boEngineer);
             DO.Task? task;
-            if (boEngineer?.Task!.Id!=0 )
+            if (boEngineer?.Task!.Id != 0)
             {
-                task = _dal.Task.Read(boEngineer.Task.Id);
+                task = _dal.Task.Read(boEngineer!.Task!.Id);
+                if (task == null)
+                    throw new BO.BlDoesNotExistException($"task with ID={boEngineer.Task.Id} does Not exist");
                 _dal!.Task.Update(task! with { EngineerId = boEngineer.Id });
 
             }
@@ -160,6 +162,24 @@ internal class EngineerImplementation : IEngineer
             throw new BO.BlDoesNotExistException($"Engineer with ID={boEngineer.Id} does Not exist", ex);
         }
     }
+    /// <summary>
+    /// The function receives a engineer and checks if it is possible to update the engineer task
+    /// </summary>
+    /// <param name="boEngineer">bo engineer for checking</param>
+    /// <exception cref="BO.BlInvalidValuesException">Unable to update engineer's task</exception>
+    private void engineerTaskCanUpdated(BO.Engineer boEngineer)
+    {
+        var unfinishedTask = (from DO.Task doTask in _dal.Task.ReadAll()
+                     where doTask.EngineerId == boEngineer.Id &&
+                     doTask.Complete > DateTime.Now
+                     select doTask).FirstOrDefault();
+        if (unfinishedTask != null && boEngineer!.Task!.Id != unfinishedTask.Id)
+            throw new BO.BlInvalidValuesException("It is not possible to update a task before its completion");
+        DO.Task? taskEngineer = _dal.Task.Read(boEngineer.Task.Id);
+        if (taskEngineer!.EngineerId !=0)
+            throw new BO.BlInvalidValuesException($"There is already an engineer for task with ID={boEngineer.Task.Id}");
+        
+    }
 }
 
-    
+

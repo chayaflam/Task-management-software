@@ -1,12 +1,15 @@
 ﻿using BlApi;
 using BO;
+using DalApi;
 using DO;
 using System.Data;
+using System.Threading.Tasks;
+
 namespace BlImplementation;
 /// <summary>
 /// Realizing the functions of the task
 /// </summary>
-internal class TaskImplementation : ITask
+internal class TaskImplementation : BlApi.ITask
 {
     private DalApi.IDal _dal = DalApi.Factory.Get;
     /// <summary>
@@ -17,17 +20,9 @@ internal class TaskImplementation : ITask
     /// <exception cref="BO.BlInvalidValuesException">Invalid values entered</exception>
     public int Create(BO.Task boTask)
     {
-        if (boTask.Id <= 0 || boTask.Alias == "")
+        if (boTask.Alias == ""|| boTask.CreatedAtDate>boTask.DeadlineDate||boTask.StartDate>boTask.CompleteDate)
             throw new BO.BlInvalidValuesException("Invalid values");
         DO.Task doTask = ConvertTaskFromBOtoDO(boTask);
-        DO.Dependency newDep = new DO.Dependency(boTask.Milestone!.Id, boTask.Id);
-        _dal.Dependency.Create(newDep);
-
-        foreach (var dep in boTask.Dependencies!)
-        {
-            newDep = new DO.Dependency(dep.Id, boTask.Id);
-            _dal.Dependency.Create(newDep);
-        }
         return _dal.Task.Create(doTask);
     }
     /// <summary>
@@ -74,29 +69,11 @@ internal class TaskImplementation : ITask
     public IEnumerable<BO.Task?> ReadAll(Func<DO.Task?, bool>? filter = null)
     {
         IEnumerable<BO.Task> allTask = (from DO.Task doTask in _dal.Task.ReadAll(filter)
-                                       select ConvertTaskFromDOtoBO(doTask));
+                                        select ConvertTaskFromDOtoBO(doTask));
         return allTask;
-              /*return (from DO.Task doTask in _dal.Task.ReadAll((Func<DO.Task?, bool>?)filter)
-                select ConvertTaskFromDOtoBO(doTask));*/
+
     }
-/*
-    IEnumerable<BO.Engineer> allEngineers = (from DO.Engineer doEngineer in _dal.Engineer.ReadAll(filter)
-                                             select new BO.Engineer
-                                             {
-                                                 Id = doEngineer.Id,
-                                                 Name = doEngineer.Name!,
-                                                 Email = doEngineer.Email!,
-                                                 Level = (BO.EngineerExperience)doEngineer.Level!,
-                                                 Cost = (double)doEngineer.Cost!,
-                                                 Task = (from DO.Task doTask in _dal.Task.ReadAll()
-                                                         where doTask.EngineerId == doEngineer.Id
-                                                         select new BO.TaskInEngineer()
-                                                         {
-                                                             Id = doTask.Id,
-                                                             Alias = doTask.Alias
-                                                         }).FirstOrDefault()
-                                             });
-        return allEngineers;*/
+
     /// <summary>
     /// Update data to the requested task
     /// </summary>
@@ -107,9 +84,14 @@ internal class TaskImplementation : ITask
     {
         if (boTask.Id <= 0 || boTask.Alias == "")
             throw new BO.BlInvalidValuesException("Invalid values");
-        DO.Task doTask = ConvertTaskFromBOtoDO(boTask);
         try {
-            _dal.Task.Update(doTask); 
+            checkValidDates(boTask);
+            TaskEngineerCanUpdated(boTask);
+            DO.Engineer? engineer = _dal.Engineer.Read(boTask!.Engineer!.Id);
+            if (engineer == null&& boTask!.Engineer!.Id!=0)
+                throw new BO.BlDoesNotExistException($"engineer with ID={boTask.Engineer.Id} does Not exist");
+            DO.Task doTask = ConvertTaskFromBOtoDO(boTask);
+            _dal.Task.Update(doTask);
         }
         catch (DalDoesNotExistException ex)
         {
@@ -125,12 +107,13 @@ internal class TaskImplementation : ITask
     {
         DO.Task doTask = new DO.Task
          (
+
          boTask.Description!, boTask.Alias!,
          boTask.Milestone is null ? false : true, boTask.CreatedAtDate, boTask.RequiredEffortTime,
          boTask.StartDate, boTask.ScheduledDate, boTask.ForecastDate, boTask.DeadlineDate, boTask.CompleteDate, boTask.Deliverables,
          boTask.Remarks, boTask.Engineer!.Id,
         (DO.EngineerExperience)boTask.Copmlexity);
-        return doTask;
+        return doTask with { Id = boTask.Id };
     }
     /// <summary>
     /// Convert DO Task object to BO Task object
@@ -217,6 +200,33 @@ internal class TaskImplementation : ITask
         catch (DO.DalDoesNotExistException ex)
         {
             throw new BO.BlDoesNotExistException($"Task with Id={id} was not found", ex);
+        }
+    }
+    /// <summary>
+    /// The function receives a task and checks if it is possible to update the engineer working on it
+    /// </summary>
+    /// <param name="BoTask">bo task for checking</param>
+    /// <exception cref="BO.BlInvalidValuesException">The engineer is busy with another task</exception>
+    private void TaskEngineerCanUpdated(BO.Task BoTask)
+    {
+        var taskInEngineer = (from DO.Task doTask in _dal.Task.ReadAll()
+                                    where doTask.EngineerId == BoTask!.Engineer!.Id &&
+                                    doTask.Complete > DateTime.Now
+                                    select doTask).FirstOrDefault();
+        if (taskInEngineer != null && BoTask!.Id != taskInEngineer.Id)
+            throw new BO.BlInvalidValuesException($"The engineer with ID={BoTask!.Engineer!.Id}is busy with another task");
+    }
+    /// <summary>
+    /// The function receives a task and checks if its dates are correct
+    /// </summary>
+    /// <param name="boTask">bo task for checking</param>
+    /// <exception cref="BO.BlInvalidValuesException">Invalid dates values</exception>
+    private void checkValidDates(BO.Task boTask)
+    {
+        if(((boTask.CreatedAtDate > boTask.DeadlineDate|| boTask.StartDate > boTask.DeadlineDate )&& boTask.DeadlineDate!=new DateTime())
+            || ((boTask.CreatedAtDate > boTask.CompleteDate || boTask.StartDate > boTask.CompleteDate) && boTask.CompleteDate != new DateTime()))
+        {
+            throw new BO.BlInvalidValuesException("Invalid dates values");
         }
     }
 }

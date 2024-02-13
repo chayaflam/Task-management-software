@@ -13,10 +13,15 @@ internal class EngineerExperienceCollection : IEnumerable
              (Enum.GetValues(typeof(BO.EngineerExperience)) as IEnumerable<BO.EngineerExperience>)!;
     public IEnumerator GetEnumerator() => e_enums.GetEnumerator();
 }
+
+/// <summary>
+/// enums of  tasks complexity
+/// </summary>
 internal class taskCopmlexityCollection : IEnumerable
 {
     static readonly IEnumerable<BO.EngineerExperience> e_enums =
              (Enum.GetValues(typeof(BO.EngineerExperience)) as IEnumerable<BO.EngineerExperience>)!;
     public IEnumerator GetEnumerator() => e_enums.GetEnumerator();
 }
+
 

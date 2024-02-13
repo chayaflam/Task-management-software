@@ -38,6 +38,11 @@ public partial class TaskWindow : Window
     public static readonly DependencyProperty CurrentTaskProperty =
         DependencyProperty.Register("CurrentTask", typeof(BO.Task),
             typeof(TaskWindow), new PropertyMetadata(null));
+
+    /// <summary>
+    /// Initialize a single task display window
+    /// </summary>
+    /// <param name="CurrentTaskId">ID of the required task</param>
     public TaskWindow(int CurrentTaskId = 0)
     {
         InitializeComponent();
@@ -73,5 +78,39 @@ public partial class TaskWindow : Window
         {
             MessageBox.Show(ex.Message);
         }
+    }
+
+    /// <summary>
+    ///Sending the task to update or add in the layer below
+    /// </summary>
+    /// <param name="sender">The control for which the action is intended</param>
+    /// <param name="e">Event handlers at the source of the event.</param>
+    private void AddOrUpdateTask(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            if ((sender as Button).Content.ToString() == "Add")
+            {
+                int id=s_bl.Task.Create(CurrentTask);
+                MessageBox.Show($"The Task with id={id} was successfully added");
+
+            }
+            else
+            {
+
+                s_bl.Task.Update(CurrentTask);
+                MessageBox.Show($"The Task with id={CurrentTask.Id} was successfully updated");
+
+            }
+            this.Close();
+        }
+        catch (BO.BlAlreadyExistsException ex) { MessageBox.Show(ex.Message, "Save Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+        catch (BO.BlInvalidValuesException ex) { MessageBox.Show(ex.Message, "Save Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+        catch (BO.BlDoesNotExistException ex) { MessageBox.Show(ex.Message, "Save Error", MessageBoxButton.OK, MessageBoxImage.Error); }
+    }
+
+    private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+
     }
 }
