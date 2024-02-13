@@ -12,6 +12,9 @@
 
     <!--External Grid-->
     <Grid>
+        <Grid.Background>
+            <ImageBrush  ImageSource="../image/leadspace.jfif" />
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>

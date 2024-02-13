@@ -7,8 +7,34 @@
         mc:Ignorable="d"
         Title="EngineerWindow" Height="450" Width="800"
         DataContext="{Binding CurrentEngineer, RelativeSource={RelativeSource Self}, Mode=TwoWay}">
+    <Window.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Albertus Medium"/>
+            <Setter Property="Foreground" Value="#FFFBF7F7"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#FF4A5669"/>
+            <Setter Property="BorderBrush" Value="#FFEC4824"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+            <Setter Property="Foreground" Value="#FFFBF7F7"/>
+        </Style>
+        <Style TargetType="DatePicker" >
+            <Setter Property="Background" Value="#FF4A5669"/>
+            <Setter Property="BorderBrush" Value="#FFEC4824"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+        </Style>
+        <Style TargetType="ComboBox" >
+            <Setter Property="Background" Value="#FF4A5669"/>
+            <Setter Property="BorderBrush" Value="#FFEC4824"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+        </Style>
+    </Window.Resources>
     <!--external grid-->
     <Grid RenderTransformOrigin="0.533,0.565" Margin="0,0,0,79">
+        <Grid.Background>
+            <ImageBrush  ImageSource="../image/leadspace.jfif" />
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -34,7 +60,7 @@
           ValidatesOnExceptions=true}" Grid.Column="1" HorizontalAlignment="Left" Margin="33,18,0,0" Grid.Row="3"  VerticalAlignment="Top" Width="120" />
         <TextBox Text="{Binding Cost, Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" HorizontalAlignment="Left" Margin="33,23,0,0" Grid.Row="4" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
         <!--internal grid-->
-        <Button Content="{Binding Id, Mode=OneTime, Converter={StaticResource ConverIdToContentKey}}"   Margin="350,82,350,-63" Grid.Row="5" Grid.ColumnSpan="2" Background="#FF82D4FF" Click="AddOrUpdateEngineer"/>
+        <Button Content="{Binding Id, Mode=OneTime, Converter={StaticResource ConverIdToContentKey}}"   Margin="348,79,352,-60" Grid.Row="5" Grid.ColumnSpan="2"  Click="AddOrUpdateEngineer" Background="#FF4A5669" BorderBrush="#FFEC4824" BorderThickness="2,2,2,2" Foreground="White" FontSize="14"/>
         <Grid Grid.Column="2" Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="37*"/>

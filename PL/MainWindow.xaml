@@ -7,17 +7,29 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         >
-  
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontFamily" Value="Albertus Medium"/>
+            <Setter Property="Foreground" Value="#FFFBF7F7"/>
+            <Setter Property="Background" Value="#FF4A5669"/>
+            <Setter Property="BorderBrush" Value="#FFEC4824" />
+            <Setter  Property="BorderThickness" Value="2,2,2,2"/>
+            <Setter Property="Width" Value="240px"/>
+        </Style>
+
+
+    </Window.Resources>
     <Grid>
         <Grid.Background>
             <ImageBrush  ImageSource="image/leadspace.jfif" />
         </Grid.Background>
         <!--data init -->
-        <Button Content="DB init" HorizontalAlignment="Center"  Margin="0,110,0,0" Height="42" Width="177" VerticalAlignment="Top" Click="initEngineerDB"/>
+        <Button Content="DB init" HorizontalAlignment="Left"  Margin="35,30,0,0" Height="44" Width="86" VerticalAlignment="Top" Click="initEngineerDB" />
         <!--handle engineer-->
-        <Button Content="Handle Engineer" HorizontalAlignment="Left" Margin="424,223,0,0" VerticalAlignment="Top" Height="42" Width="99" Click="ShowEngineerList"/>
+        <Button Content="Handle Engineer" HorizontalAlignment="Left" Margin="427,0,0,0" VerticalAlignment="Center" Height="42" Width="164" Click="ShowEngineerList"/>
         <!--handle task-->
-        <Button Content="Handle task" HorizontalAlignment="Left" Margin="291,223,0,0" VerticalAlignment="Top" Height="42" Width="99" Click="ShowTaskList"/>
+        <Button Content="Handle task" HorizontalAlignment="Left" Margin="216,0,0,0" VerticalAlignment="Center" Height="42" Width="164" Click="ShowTaskList"/>
 
     </Grid>
 </Window>
