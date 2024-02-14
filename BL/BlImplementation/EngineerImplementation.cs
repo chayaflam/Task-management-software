@@ -87,7 +87,7 @@ internal class EngineerImplementation : IEngineer
         if (doEngineer == null)
             throw new BO.BlDoesNotExistException($"Engineer with ID={id} does Not exist");
 
-        BO.Engineer a = new BO.Engineer()
+        return new BO.Engineer()
         {
             Id = id,
             Name = doEngineer!.Name!,
@@ -95,14 +95,13 @@ internal class EngineerImplementation : IEngineer
             Level = (BO.EngineerExperience)doEngineer.Level!,
             Cost = (double)doEngineer.Cost!,
             Task = (from DO.Task doTask in _dal.Task.ReadAll()
-                    where doTask.EngineerId == doEngineer.Id
+                    where doTask.EngineerId == doEngineer.Id&& doTask.Complete==null
                     select new BO.TaskInEngineer()
                     {
                         Id = doTask.Id,
                         Alias = doTask.Alias
                     }).FirstOrDefault()
         };
-        return a;
     }
     /// <summary>
     /// Reading all or part of the engineers from DO
@@ -163,7 +162,7 @@ internal class EngineerImplementation : IEngineer
         }
     }
     /// <summary>
-    /// The function receives a engineer and checks if it is possible to update the engineer task
+    /// The function checks if it is possible to update the engineer task
     /// </summary>
     /// <param name="boEngineer">bo engineer for checking</param>
     /// <exception cref="BO.BlInvalidValuesException">Unable to update engineer's task</exception>
@@ -171,14 +170,42 @@ internal class EngineerImplementation : IEngineer
     {
         var unfinishedTask = (from DO.Task doTask in _dal.Task.ReadAll()
                      where doTask.EngineerId == boEngineer.Id &&
-                     doTask.Complete > DateTime.Now
-                     select doTask).FirstOrDefault();
+                      setStatus(doTask.Id)!= 4 //Checks if the task has not been completed
+                              select doTask).FirstOrDefault();
         if (unfinishedTask != null && boEngineer!.Task!.Id != unfinishedTask.Id)
-            throw new BO.BlInvalidValuesException("It is not possible to update a task before its completion");
-        DO.Task? taskEngineer = _dal.Task.Read(boEngineer.Task.Id);
+            throw new BO.BlInvalidValuesException($"It is not possible to update a task with ID={boEngineer.Task.Id} before its completion");
+        DO.Task? taskEngineer = _dal.Task.Read(boEngineer!.Task!.Id);
         if (taskEngineer!=null&& taskEngineer.Id!= boEngineer.Task.Id)
             throw new BO.BlInvalidValuesException($"There is already an engineer for task with ID={boEngineer.Task.Id}");
         
+    }
+    /// <summary>
+    /// Returns the status of an engineer's task
+    /// </summary>
+    /// <param name="id">ID of the desired task</param>
+    /// <returns>The state of the task after calculation</returns>
+    /// <exception cref="BO.BlDoesNotExistException">The requested task does not exist in the system</exception>
+    private int setStatus(int id)
+    {
+        try
+        {
+            DO.Task? doTask = _dal.Task.Read(id);
+            int status = 0;
+            if (doTask!.Complete is not null)
+                status = 4;
+            else if (doTask.ForecastDate < DateTime.Now)
+                status = 3;
+            else if (doTask.Start < DateTime.Now)
+                status = 2;
+            else if (doTask.ForecastDate is not null)
+                status = 1;
+            else status = 0;
+            return status;
+        }
+        catch (DO.DalDoesNotExistException ex)
+        {
+            throw new BO.BlDoesNotExistException($"Task with Id={id} was not found", ex);
+        }
     }
 }
 

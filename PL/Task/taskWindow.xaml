@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="TaskWindow" Height="450" Width="800"
         DataContext="{Binding CurrentTask, RelativeSource={RelativeSource Self}, Mode=TwoWay}">
+    <!--window style-->
     <Window.Resources>
         <Style TargetType="Label">
             <Setter Property="FontSize" Value="18"/>
@@ -30,14 +31,19 @@
             <Setter Property="BorderThickness" Value="1,1,1,1"/>
         </Style>
     </Window.Resources>
+    
+    <!--extenal grid-->
     <Grid>
+        <!--background-->
         <Grid.Background>
             <ImageBrush  ImageSource="../image/leadspace.jfif" />
         </Grid.Background>
+        <!--filter grid-->
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="33"/>
         </Grid.RowDefinitions>
+        <!--data grid-->
         <Grid  Grid.Row="0" Margin="-10,8,10,21">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
@@ -48,8 +54,8 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
-
             </Grid.RowDefinitions>
+            
             <Grid.ColumnDefinitions >
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -66,6 +72,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="192.308"/>
                 </Grid.ColumnDefinitions >
+                
                 <Label Content="Engineer id" HorizontalAlignment="Left" VerticalAlignment="Top" Height="27" Width="100" Margin="-1,-4,0,0" Foreground="#FFFBF7F7" FontFamily="Aerohop Black" Grid.ColumnSpan="2" FontSize="14"/>
                 <Label Content="Engineer name" HorizontalAlignment="Left" Margin="0,19,0,0" VerticalAlignment="Top" Width="123" Height="43" Grid.RowSpan="2" Grid.ColumnSpan="2" Foreground="#FFFBF7F7" FontFamily="Aerohop Black" FontSize="14"/>
                 <TextBox Text="{Binding Engineer.Id , Mode=TwoWay, NotifyOnValidationError=true,  ValidatesOnExceptions=true}" Grid.Column="1" HorizontalAlignment="Left" Margin="96,4,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="95" Background="#FF4A5669"/>

@@ -9,30 +9,32 @@
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="EngineerListWindow" Height="640" Width="800">
 
-
     <!--External Grid-->
     <Grid>
+        <!--Background-->
         <Grid.Background>
             <ImageBrush  ImageSource="../image/leadspace.jfif" />
         </Grid.Background>
+
+        <!--Internal, Upper Grid-->
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!--Internal, Upper Grid-->
+
         <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="search" HorizontalAlignment="Left" Margin="234,10,0,0" VerticalAlignment="Top" Grid.Column="0"/>
-            <!--search engineer-->
+            <Label Content="choose engineer level:" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="#FFEDD8D8" FontSize="20" FontWeight="Bold" Margin="153,0,0,0"/>
+            <!--filter engineer-->
             <ComboBox ItemsSource="{Binding Source={StaticResource EngineerExperienceCollectionKey}}"
                           Grid.Column="1" SelectedValue="{Binding Path=EngineerExperience,Mode=TwoWay}" 
                       SelectionChanged="FilteringEngineers" />
-
         </Grid>
+        <!--engineer list-->
         <ListView  Margin="5" Grid.Row="1" ItemsSource="{Binding Path=EngineerList }" MouseDoubleClick="UpdateEngineer" SelectionChanged="ListView_SelectionChanged" >
             <ListView.View>
                 <GridView>
@@ -40,6 +42,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="AddEngineer"/>
+
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="AddEngineer" Background="White" BorderBrush="#FFF34C0D" BorderThickness="2,2,2,2" FontSize="16"/>
     </Grid>
 </Window>

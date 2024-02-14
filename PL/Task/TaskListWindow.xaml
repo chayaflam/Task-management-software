@@ -7,31 +7,34 @@
         mc:Ignorable="d"
         Title="TaskListWindow" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+    <!--external grid-->
     <Grid>
+        <!--Background-->
         <Grid.Background>
             <ImageBrush  ImageSource="../image/leadspace.jfif" />
         </Grid.Background>
+
         <!--external grid-->
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"/>
             <RowDefinition Height="500*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <!--search grid-->
         <Grid HorizontalAlignment="Stretch" Height="auto" Grid.Row="0" VerticalAlignment="Stretch" Width="auto">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Label Content="search" HorizontalAlignment="Left" Margin="229,0,0,0" VerticalAlignment="Top" Grid.Column="0"/>
-            
+            <Label Content="choose task complexity:" HorizontalAlignment="Left" Margin="192,0,0,0" VerticalAlignment="Top" Grid.Column="0" Foreground="#FFF9E9E9" FontSize="18" Height="53"/>
+
             <!--search task-->
             <ComboBox ItemsSource="{Binding Source={StaticResource TaskCopmlexityCollectionKey}}"
                   Grid.Column="1" SelectedValue="{Binding Path=taskCopmlexity,Mode=TwoWay}" 
               SelectionChanged="FilteringTask" HorizontalAlignment="Left" Width="400" />
         </Grid>
-        
+
         <!--tasks list-->
         <ListView  Margin="5,10,5,0" Grid.Row="1" ItemsSource="{Binding Path=TaskList }" MouseDoubleClick="UpdateTask" >
             <ListView.View>
@@ -40,8 +43,8 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        
+
         <!--add task button-->
-        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="AddTask"/>
+        <Button Content="Add" Grid.Row="2" HorizontalAlignment="Center" Height="50" Width="100" Click="AddTask" BorderBrush="#FFF74A08" BorderThickness="2,2,2,2" Background="White" FontSize="16"/>
     </Grid>
 </Window>

@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         >
+    <!--window style-->
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="FontSize" Value="18"/>
@@ -17,9 +18,9 @@
             <Setter  Property="BorderThickness" Value="2,2,2,2"/>
             <Setter Property="Width" Value="240px"/>
         </Style>
-
-
     </Window.Resources>
+    
+    <!--external grid-->
     <Grid>
         <Grid.Background>
             <ImageBrush  ImageSource="image/leadspace.jfif" />
